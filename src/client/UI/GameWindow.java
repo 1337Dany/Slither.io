@@ -140,7 +140,6 @@ public class GameWindow extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 gameManager.establishConnection(name.getText(), ip.getText());
-                System.out.println("test");
             }
         });
 
@@ -151,6 +150,13 @@ public class GameWindow extends JFrame {
         menuPanel.add(ip);
         menuPanel.add(enterIP);
         menuPanel.add(logo);
+        this.add(menuPanel);
+    }
+
+    public void hideMenu(){
+        this.remove(menuPanel);
+    }
+    public void showMenu(){
         this.add(menuPanel);
     }
 

@@ -10,8 +10,8 @@ public class Client {
         gameManager = new GameManager();
     }
 
-    public void connect(){
-
+    public boolean connect(){
+        return true;
     }
 
     public void setUsername(String username){

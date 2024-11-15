@@ -4,28 +4,33 @@ import client.UI.GameWindow;
 
 public class GameManager {
     private final GameWindow gameWindow;
-    private Client client = new Client();
+    private final Client client = new Client();
+    private Game game;
+
     private final SettingsSetter settingsSetter;
 
-    public GameManager(){
+    public GameManager() {
         gameWindow = new GameWindow(this);
         settingsSetter = new SettingsSetter(gameWindow);
 
-        startGame();
-    }
-
-    public void startGame(){
         gameWindow.openMainJFrame();
 
         settingsSetter.setParametersToObjects(gameWindow);
     }
 
-    public void establishConnection(String username, String ip){
+    public void startGame() {
+        game = new Game();
+    }
+
+    public void establishConnection(String username, String ip) {
         client.setUsername(username);
         client.setIp(ip);
 
-        client.connect();
+        if (client.connect()) {
+            gameWindow.hideMenu();
+        }
+
+        gameWindow.repaint();
     }
 
-    //TODO: make play button return name and ip in the way that it will manipulates through manager
 }
