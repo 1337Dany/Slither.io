@@ -1,6 +1,6 @@
-package UI;
+package client.UI;
 
-import DOMAIN.GameManager;
+import client.DOMAIN.GameManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,6 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class GameWindow extends JFrame {
+    private static final Dimension frameSize = new Dimension(600,600);
 
     private final GameManager gameManager;
     private final JPanel menuPanel = new JPanel();
@@ -19,7 +20,7 @@ public class GameWindow extends JFrame {
     public void openMainJFrame() {
         SwingUtilities.invokeLater(() -> {
             this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            this.setSize(500, 500);
+            this.setSize(frameSize);
             this.setLayout(null);
 
             drawMenu();
@@ -30,7 +31,8 @@ public class GameWindow extends JFrame {
         menuPanel.setBackground(Color.DARK_GRAY);
         menuPanel.setLayout(null);
 
-        menuPanel.setBounds(0, 0, this.getWidth(), this.getHeight());
+        menuPanel.setSize(frameSize);
+        menuPanel.setLocation(0,0);
 
         JLabel logo = new JLabel("Slither.io");
         logo.setHorizontalAlignment(SwingUtilities.CENTER);
@@ -98,7 +100,6 @@ public class GameWindow extends JFrame {
         ip.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
                 if(ip.getText().equals("\\\\.....")){
                     ip.setText("");
                 }
@@ -111,7 +112,6 @@ public class GameWindow extends JFrame {
         name.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
                 if(name.getText().equals("\\\\.....")){
                     name.setText("");
                 }
@@ -125,16 +125,24 @@ public class GameWindow extends JFrame {
         menuPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                if(ip.getText().equals("")){
-                    ip.setText("\\\\.....");
-                }
-                if(name.getText().equals("")){
-                    name.setText("\\\\.....");
+                if (!playButton.getBounds().contains(e.getPoint())) {
+                    if (ip.getText().equals("")) {
+                        ip.setText("\\\\.....");
+                    }
+                    if (name.getText().equals("")) {
+                        name.setText("\\\\.....");
+                    }
                 }
             }
         });
 
+        playButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                gameManager.establishConnection(name.getText(), ip.getText());
+                System.out.println("test");
+            }
+        });
 
 
         menuPanel.add(playButton);

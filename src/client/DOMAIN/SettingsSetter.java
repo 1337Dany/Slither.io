@@ -1,6 +1,6 @@
-package DOMAIN;
+package client.DOMAIN;
 
-import DATA.Data;
+import client.DATA.Data;
 
 import javax.swing.*;
 import java.awt.*;

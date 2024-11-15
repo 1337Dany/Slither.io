@@ -1,9 +1,9 @@
-package DATA;
+package client.DATA;
 
 public enum Data {
 
-    ICON("src/DATA/images/gameIcon.png"),
-    FONT("src/DATA/fonts/Montserrat-Bold.ttf");
+    ICON("src/client/DATA/images/gameIcon.png"),
+    FONT("src/client/DATA/fonts/Montserrat-Bold.ttf");
 
     private final String path;
 
