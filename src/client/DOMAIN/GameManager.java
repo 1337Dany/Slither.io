@@ -28,6 +28,7 @@ public class GameManager {
 
         if (client.connect()) {
             gameWindow.hideMenu();
+            startGame();
         }
 
         gameWindow.repaint();
