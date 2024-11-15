@@ -1,5 +1,7 @@
 package UI;
 
+import DOMAIN.GameManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -7,7 +9,13 @@ import java.awt.event.MouseEvent;
 
 public class GameWindow extends JFrame {
 
+    private final GameManager gameManager;
     private final JPanel menuPanel = new JPanel();
+    private final JButton playButton = new JButton("Play");
+
+    public GameWindow(GameManager gameManager) {
+        this.gameManager = gameManager;
+    }
     public void openMainJFrame() {
         SwingUtilities.invokeLater(() -> {
             this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -40,7 +48,7 @@ public class GameWindow extends JFrame {
         enterIP.setFont(new Font(enterIP.getFont().getFontName(), Font.PLAIN, 30));
         enterIP.setBounds(
                 0,
-                logo.getY() + logo.getHeight() + 100,
+                logo.getY() + logo.getHeight() + 50,
                 menuPanel.getWidth(),
                 (int) (0.1 * menuPanel.getHeight())
         );
@@ -76,6 +84,14 @@ public class GameWindow extends JFrame {
                 enterName.getY() + enterName.getHeight() + 10,
                 menuPanel.getWidth() - 100,
                 (int) (0.1 * menuPanel.getHeight())
+        );
+
+        playButton.setFont(new Font(name.getFont().getFontName(), Font.PLAIN, 30));
+        playButton.setBounds(
+                menuPanel.getWidth()/2 - 200/2,
+                name.getY() + name.getHeight() + 10,
+                200,
+                50
         );
 
 
@@ -121,6 +137,7 @@ public class GameWindow extends JFrame {
 
 
 
+        menuPanel.add(playButton);
         menuPanel.add(name);
         menuPanel.add(enterName);
         menuPanel.add(ip);
