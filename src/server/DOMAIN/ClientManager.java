@@ -8,52 +8,58 @@ import java.net.Socket;
 
 public class ClientManager implements Runnable {
     private final Server server;
+    private final Socket socket;
     private BufferedReader in = null;
     private PrintWriter out = null;
     private String myName;
     private final String myIp;
     private final int myPort;
-    public ClientManager(Server server, Socket socket){
+
+    public ClientManager(Server server, Socket socket) {
         this.server = server;
+        this.socket = socket;
         myIp = String.valueOf(socket.getInetAddress());
         myPort = socket.getPort();
 
-        //  Establish io streams
-        try {
+        try{
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             myName = in.readLine();
-        }catch (IOException e){
-            System.out.println("Client " + getFullAddress() + " couldn't connect!");
-        }
+        }catch (IOException ignored){}
     }
 
     @Override
     public void run() {
         try {
-            while (true){
+            //  Establish io streams
+
+
+
+            while (true) {
                 String clientMessage = in.readLine();
                 actionPerform(clientMessage);
             }
 
-        }catch (IOException ignored){
-            System.out.println("Client " + myIp + ":" + myPort + " disconected");
+        } catch (IOException ignored) {
+            System.out.println("Client " + getFullAddress() + " disconected");
+            server.kickUser(myName);
         }
     }
 
-    private void actionPerform(String message){
+    private void actionPerform(String message) {
 
     }
 
-    public void sendMessage(String message){
+    public void sendMessage(String message) {
         out.println(message);
     }
 
-    public String getFullAddress(){
+    public String getFullAddress() {
         return myIp + ":" + myPort;
     }
-    public String getName(){
+
+    public String getName() {
         return myName;
     }
 }

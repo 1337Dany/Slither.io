@@ -1,12 +1,15 @@
 package client.DOMAIN;
 
 import client.UI.GameWindow;
+import client.UI.SlitherPanel;
+
+import javax.swing.*;
 
 public class GameManager {
-    private final GameWindow gameWindow;
+    private GameWindow gameWindow;
+    private SlitherPanel slitherPanel;
     private final Client client = new Client();
-    private Game game;
-
+    private Chat chat;
     private final SettingsSetter settingsSetter;
 
     public GameManager() {
@@ -19,8 +22,8 @@ public class GameManager {
     }
 
     public void startGame() {
-        game = new Game();
-        gameWindow.add(game);
+        SwingUtilities.invokeLater(() -> slitherPanel = new SlitherPanel(gameWindow));
+        chat = new Chat();
     }
 
     public void establishConnection(String username, String ip) {
@@ -29,10 +32,15 @@ public class GameManager {
 
         if (client.connect()) {
             gameWindow.hideMenu();
+            gameWindow.repaint();
+
             startGame();
-
         }
+    }
 
+    public void returnToMenu(){
+        gameWindow.remove(slitherPanel);
+        gameWindow.showMenu();
         gameWindow.repaint();
     }
 

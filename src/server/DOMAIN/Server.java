@@ -22,7 +22,7 @@ public class Server {
                 while (true){
                     Socket clientSocket = serverSocket.accept();
                     ClientManager clientManager = new ClientManager(this, clientSocket);
-                    clientManager.run();
+                    new Thread(clientManager).start();
                     clients.put(clientManager.getName(), clientManager);
                     System.out.println("Client " + clientManager.getFullAddress() + " connected successfully");
 
@@ -34,8 +34,12 @@ public class Server {
             }
     }
     private static void sendMessageToEveryone(String message){
-        for (int i = 0; i < clients.size(); i++) {
-            clients.get(i).sendMessage(message);
+        for (Map.Entry<String, ClientManager> client : clients.entrySet()) {
+            client.getValue().sendMessage(message);
         }
+    }
+
+    public void kickUser(String name){
+        clients.remove(name);
     }
 }

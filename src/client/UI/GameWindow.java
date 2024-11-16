@@ -18,13 +18,11 @@ public class GameWindow extends JFrame {
         this.gameManager = gameManager;
     }
     public void openMainJFrame() {
-        SwingUtilities.invokeLater(() -> {
             this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             this.setSize(frameSize);
             this.setLayout(null);
 
-            drawMenu();
-        });
+        drawMenu();
     }
 
     private void drawMenu() {
@@ -150,7 +148,7 @@ public class GameWindow extends JFrame {
         menuPanel.add(ip);
         menuPanel.add(enterIP);
         menuPanel.add(logo);
-        this.add(menuPanel);
+        showMenu();
     }
 
     public void hideMenu(){

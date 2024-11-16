@@ -25,10 +25,11 @@ public class Client implements Runnable {
             serverSocket = new Socket(ip, port);
             out = new PrintWriter(serverSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
-
-            run();
+            sendMessage(username);
+            new Thread(this).start();
             return true;
         } catch (IOException ignored) {
+            System.out.println(false);
             return false;
         }
 
@@ -36,11 +37,12 @@ public class Client implements Runnable {
     @Override
     public void run() {
         try {
-            while (in.readLine().equals("Test")){
-                System.out.println("test client 2");
+            while (true){
+                if(in.readLine().equals("Test"))System.out.println("test client");
             }
         } catch (IOException exception) {
             System.out.println("Server disconnected");
+            gameManager.returnToMenu();
         }
     }
 
