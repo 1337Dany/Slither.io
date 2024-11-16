@@ -1,31 +1,30 @@
 package server.DOMAIN;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Server {
     private final static int port = 9999;
-    static ArrayList<ClientManager> clients = new ArrayList<>();
+    static Map<String, ClientManager> clients = new HashMap<>();
 
     public static void main(String[] args) {
         Server server = new Server();
 
-        startServer();
+        server.startServer();
     }
 
-    private static void startServer(){
+    private void startServer(){
             try(ServerSocket serverSocket = new ServerSocket(port)){
 
                 while (true){
                     Socket clientSocket = serverSocket.accept();
-                    ClientManager clientManager = new ClientManager(clientSocket);
+                    ClientManager clientManager = new ClientManager(this, clientSocket);
                     clientManager.run();
-                    clients.add(clientManager);
-                    System.out.println("Client " + clientSocket.getInetAddress() + " connected successfully");
+                    clients.put(clientManager.getName(), clientManager);
+                    System.out.println("Client " + clientManager.getFullAddress() + " connected successfully");
 
                     sendMessageToEveryone("Test");
                 }

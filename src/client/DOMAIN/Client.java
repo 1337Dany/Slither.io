@@ -12,16 +12,9 @@ public class Client implements Runnable {
     private String ip;
     private static int port = 9999;
 
-    private Socket clientSocket = null;
+    private Socket serverSocket = null;
     private BufferedReader in = null;
     private PrintWriter out = null;
-
-    public Client(Socket socket) {
-        clientSocket = socket;
-    }
-
-    public Client() {
-    }
 
     public static void main(String[] args) {
         gameManager = new GameManager();
@@ -29,9 +22,9 @@ public class Client implements Runnable {
 
     public boolean connect() {
         try {
-            clientSocket = new Socket(ip, port);
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            serverSocket = new Socket(ip, port);
+            out = new PrintWriter(serverSocket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
 
             run();
             return true;
@@ -39,6 +32,16 @@ public class Client implements Runnable {
             return false;
         }
 
+    }
+    @Override
+    public void run() {
+        try {
+            while (in.readLine().equals("Test")){
+                System.out.println("test client 2");
+            }
+        } catch (IOException exception) {
+            System.out.println("Server disconnected");
+        }
     }
 
     public void setUsername(String username) {
@@ -50,13 +53,7 @@ public class Client implements Runnable {
     }
 
 
-    @Override
-    public void run() {
-        try {
-            while (in.readLine().equals("Test")){
-                System.out.println("test client 2");
-            }
-        } catch (IOException exception) {
-        }
+    public void sendMessage(String message){
+        out.println(message);
     }
 }
