@@ -21,10 +21,13 @@ public class ClientManager implements Runnable {
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-            //  Check the password
 
         }catch (IOException ignored){
             System.out.println("Client " + clientSocket.getInetAddress() + " disconected");
         }
+    }
+
+    public void sendMessage(String message){
+        out.println(message);
     }
 }

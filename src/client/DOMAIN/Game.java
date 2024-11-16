@@ -1,4 +1,10 @@
 package client.DOMAIN;
 
-public class Game {
+import javax.swing.*;
+
+public class Game extends JPanel{
+
+    public Game(){
+
+    }
 }

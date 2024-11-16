@@ -33,6 +33,7 @@ public class Client implements Runnable {
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
+            run();
             return true;
         } catch (IOException ignored) {
             return false;
@@ -51,6 +52,11 @@ public class Client implements Runnable {
 
     @Override
     public void run() {
-
+        try {
+            while (in.readLine().equals("Test")){
+                System.out.println("test client 2");
+            }
+        } catch (IOException exception) {
+        }
     }
 }

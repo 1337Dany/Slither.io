@@ -20,6 +20,7 @@ public class GameManager {
 
     public void startGame() {
         game = new Game();
+        gameWindow.add(game);
     }
 
     public void establishConnection(String username, String ip) {
@@ -29,6 +30,7 @@ public class GameManager {
         if (client.connect()) {
             gameWindow.hideMenu();
             startGame();
+
         }
 
         gameWindow.repaint();
