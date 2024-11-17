@@ -15,8 +15,9 @@ public class SlitherPanel extends JPanel {
         this.setSize(gameWindow.getSize());
         this.setLayout(null);
 
-        drawPanel();
         drawChat();
+        drawPanel();
+
         gameManager.setChatPanel(chat);
 
         gameWindow.repaint();
@@ -35,7 +36,8 @@ public class SlitherPanel extends JPanel {
         name.setForeground(Color.WHITE);
         name.setBounds(space,space,gameWindow.getWidth()-space*2, gameWindow.getHeight()-space*2);
         name.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-
+        name.setEditable(false);
+        name.setFocusable(false);
 
         this.add(name);
         gameWindow.add(this);

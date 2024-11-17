@@ -30,7 +30,7 @@ public class Server {
                 sendMessageToEveryone("Server: " + clientManager.getName() + " connected!");
 
                 String tmp;
-                while ((tmp = chatHistory.getNextTextArea()) != null){
+                while ((tmp = chatHistory.getNextTextArea()) != null) {
                     clientManager.sendMessage(tmp);
                 }
 
@@ -59,14 +59,24 @@ public class Server {
         clients.get(from).sendMessage(" -> <" + names[0] + ">: " + names[1]);
     }
 
-    public void sendMessageToEveryoneExceptOne(String message, String name) {
+    public void sendMessageToEveryoneExceptOne(String message, String from) {
+        String[] names = message.split(":", 2);
+        String[] notToSendTo = names[0].split(",");
+
         for (Map.Entry<String, ClientManager> client : clients.entrySet()) {
-            if (!name.equals(client.getKey())) {
-                client.getValue().sendMessage(message);
+            for (String s : notToSendTo) {
+                if (!client.getKey().equals(s)) {
+                    if (!client.getKey().equals(from)) {
+                        client.getValue().sendMessage("(" + from + ") -> : " + names[1]);
+                    }
+                }
             }
         }
+
+        clients.get(from).sendMessage(" -> not to <" + names[0] + ">: " + names[1]);
     }
-    public ChatHistory getChatHistory(){
+
+    public ChatHistory getChatHistory() {
         return chatHistory;
     }
 

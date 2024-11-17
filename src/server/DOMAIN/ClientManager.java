@@ -25,12 +25,13 @@ public class ClientManager implements Runnable {
         myPort = socket.getPort();
 
         //  Establish io streams
-        try{
+        try {
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             myName = in.readLine();
-        }catch (IOException ignored){}
+        } catch (IOException ignored) {
+        }
     }
 
     @Override
@@ -51,21 +52,23 @@ public class ClientManager implements Runnable {
     }
 
     private void actionPerform(String message) {
-        if(message.contains("admin s30050: ")){
+        if (message.contains("admin s30050: ")) {
             server.sendMessageToEveryone("Admin message: " + message.substring(14));
-           if (message.contains("kick: ")){
-                server.kickUser(message.substring(26));
+            if (message.contains("kick: ")) {
+                server.kickUser(message.substring(20));
             }
-        }else if(!server.getBannedPhrases().containsBanPharases(message)) {
+        } else if (!server.getBannedPhrases().containsBanPharases(message)) {
             if (message.contains("To ")) {
-            if (message.contains("To all: ")) {
-                server.getChatHistory().addNote("To all: " + "(" + myName + "): " + message.substring(8));
-                server.sendMessageToEveryone("To all: " + "(" + myName + "): " + message.substring(8));
-            }else {
-                server.sendMessageTo(message.substring(3), myName);
+                if (message.contains("To all: ")) {
+                    server.getChatHistory().addNote("To all: " + "(" + myName + "): " + message.substring(8));
+                    server.sendMessageToEveryone("To all: " + "(" + myName + "): " + message.substring(8));
+                } else if (message.contains("To not ")) {
+                    server.sendMessageToEveryoneExceptOne(message.substring(7),myName);
+                } else {
+                    server.sendMessageTo(message.substring(3), myName);
+                }
             }
-        }
-        }else{
+        } else {
             sendMessage("Server: Inappropriate message detected in (" + message + ")");
         }
     }
@@ -73,17 +76,21 @@ public class ClientManager implements Runnable {
     public void sendMessage(String message) {
         out.println(message);
     }
-    public void closeConnection(){
+
+    public void closeConnection() {
         try {
             socket.close();
             in.close();
             out.close();
             isRunning = false;
-        }catch (IOException ignored){}
+        } catch (IOException ignored) {
+        }
     }
+
     public String getFullAddress() {
         return myIp + ":" + myPort;
     }
+
     public String getName() {
         return myName;
     }

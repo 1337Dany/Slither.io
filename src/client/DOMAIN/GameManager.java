@@ -4,7 +4,6 @@ import client.UI.ChatPanel;
 import client.UI.GameWindow;
 import client.UI.SlitherPanel;
 
-import javax.swing.*;
 import java.awt.*;
 
 public class GameManager {
