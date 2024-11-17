@@ -79,7 +79,15 @@ public class GameWindow extends JFrame {
         name.setForeground(Color.WHITE);
         name.setBackground(Color.DARK_GRAY);
         name.setFont(new Font(name.getFont().getFontName(), Font.PLAIN, 30));
-        name.setBounds(
+
+        JScrollPane scrollPane = new JScrollPane(name);
+        scrollPane.setBorder(null);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        SwingUtilities.invokeLater(() -> name.setCaretPosition(name.getDocument().getLength()));
+
+        scrollPane.setBounds(
                 menuPanel.getWidth()/2-(menuPanel.getWidth() - 100)/2,
                 enterName.getY() + enterName.getHeight() + 10,
                 menuPanel.getWidth() - 100,
@@ -89,7 +97,7 @@ public class GameWindow extends JFrame {
         playButton.setFont(new Font(name.getFont().getFontName(), Font.PLAIN, 30));
         playButton.setBounds(
                 menuPanel.getWidth()/2 - 200/2,
-                name.getY() + name.getHeight() + 10,
+                scrollPane.getY() + scrollPane.getHeight() + 10,
                 200,
                 50
         );
@@ -143,7 +151,7 @@ public class GameWindow extends JFrame {
 
 
         menuPanel.add(playButton);
-        menuPanel.add(name);
+        menuPanel.add(scrollPane);
         menuPanel.add(enterName);
         menuPanel.add(ip);
         menuPanel.add(enterIP);

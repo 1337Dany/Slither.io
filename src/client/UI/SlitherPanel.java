@@ -24,14 +24,18 @@ public class SlitherPanel extends JPanel {
     }
 
     private void drawPanel(){
+        int space = 20;//separated space for name
         this.setBackground(Color.DARK_GRAY);
         this.setLocation(0,0);
-        JLabel name = new JLabel(gameManager.getClient().getUsername());
+        JTextArea name = new JTextArea(gameManager.getClient().getUsername());
+        name.setFont(new Font(name.getFont().getFontName(), Font.PLAIN, 30));
+        name.setWrapStyleWord(true);
+        name.setLineWrap(true);
         name.setOpaque(false);
         name.setForeground(Color.WHITE);
-        name.setHorizontalAlignment(SwingUtilities.CENTER);
-        name.setFont(new Font(name.getFont().getFontName(), Font.PLAIN, 30));
-        name.setBounds(this.getWidth()-200,0,200, 50);
+        name.setBounds(space,space,gameWindow.getWidth()-space*2, gameWindow.getHeight()-space*2);
+        name.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+
 
         this.add(name);
         gameWindow.add(this);
