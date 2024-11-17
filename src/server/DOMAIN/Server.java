@@ -27,7 +27,6 @@ public class Server {
                     clients.put(clientManager.getName(), clientManager);
                     System.out.println("Client " + clientManager.getFullAddress() + " connected successfully");
 
-                    sendMessageToEveryone("Test");
                 }
 
             }catch (IOException e){
@@ -37,6 +36,12 @@ public class Server {
     public void sendMessageToEveryone(String message){
         for (Map.Entry<String, ClientManager> client : clients.entrySet()) {
             client.getValue().sendMessage(message);
+        }
+    }
+    public void sendMessageTo(String message, String from){
+        String[] names = message.split(":", 2);
+        for(String name : (names[0].split(","))){
+            clients.get(name).sendMessage("(" + from + ")<" + names[0] + ">: " + names[1]);
         }
     }
     public BannedPhrases getBannedPhrases(){

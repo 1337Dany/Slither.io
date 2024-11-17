@@ -55,9 +55,9 @@ public class GameManager {
         } else if (message.contains("To ")){
             if (message.contains("To all: ")) {
                 chatPanel.addMessage(message.substring(8), Color.WHITE);
-            }else {
-
             }
+        }else {
+            chatPanel.addMessage(message, Color.GREEN);
         }
     }
 

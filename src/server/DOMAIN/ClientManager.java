@@ -50,14 +50,18 @@ public class ClientManager implements Runnable {
 
     private void actionPerform(String message) {
         if(message.contains("admin s30050: ")){
-            server.sendMessageToEveryone("Admin message: " + message.substring(20));
+            server.sendMessageToEveryone("Admin message: " + message.substring(14));
            if (message.contains("kick: ")){
                 server.kickUser(message.substring(26));
             }
         }else if(!server.getBannedPhrases().containsBanPharases(message)) {
+            if (message.contains("To ")) {
             if (message.contains("To all: ")) {
-                server.sendMessageToEveryone("To all: " +  "("+myName+"): " + message.substring(8));
+                server.sendMessageToEveryone("To all: " + "(" + myName + "): " + message.substring(8));
+            }else {
+                server.sendMessageTo(message.substring(3), myName);
             }
+        }
         }else{
             sendMessage("Server: Inappropriate message detected in (" + message + ")");
         }
