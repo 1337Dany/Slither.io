@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class ChatPanel extends JPanel implements Runnable {
     private final GameManager gameManager;
@@ -33,15 +35,27 @@ public class ChatPanel extends JPanel implements Runnable {
         scrollPane = new JScrollPane(messagePanel);
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         makeScrollBarTransparent(scrollPane);
 
         add(scrollPane, BorderLayout.CENTER);
 
-        userInput = new JTextArea();
+        userInput = new JTextArea("Tap to write a message...");
+        userInput.setOpaque(false);
+        userInput.setForeground(Color.LIGHT_GRAY);
         add(userInput, BorderLayout.SOUTH);
 
+        userInput.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if(userInput.getText().equals("Tap to write a message...")){
+                    userInput.setText("");
+                    userInput.setForeground(Color.WHITE);
+                }
+            }
+        });
         userInput.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent event) {
@@ -59,26 +73,33 @@ public class ChatPanel extends JPanel implements Runnable {
     }
 
     public void addMessage(String message, Color color) {
-        JLabel label = new JLabel(message);
-        label.setForeground(color);
-        label.setOpaque(false);
-        label.setFont(new Font(label.getFont().getFontName(), Font.PLAIN, 14));
 
-        messagePanel.add(label);
+        System.out.println(message);
+
+        JTextArea messageLabel = new JTextArea(message);
+        messageLabel.setEditable(false);
+        messageLabel.setWrapStyleWord(true);
+        messageLabel.setLineWrap(true);
+        messageLabel.setOpaque(false);
+        messageLabel.setForeground(color);
+        messageLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        messageLabel.setFont(new Font(messageLabel.getFont().getFontName(), Font.PLAIN, 14));
+
+        messagePanel.add(messageLabel);
         messagePanel.revalidate();
         messagePanel.repaint();
 
         // Automatically scrolling to the newest messages
-        SwingUtilities.invokeLater(() ->
-                scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum())
+        SwingUtilities.invokeLater(() -> {
+                    scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
+                    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+                }
         );
     }
     private void makeScrollBarTransparent(JScrollPane scrollPane) {
         JScrollBar verticalBar = scrollPane.getVerticalScrollBar();
-        JScrollBar horizontalBar = scrollPane.getHorizontalScrollBar();
 
         verticalBar.setOpaque(false);
-        horizontalBar.setOpaque(false);
     }
 
     @Override
