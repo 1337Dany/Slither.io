@@ -24,6 +24,8 @@ public class GameManager {
     public void startGame() {
         SwingUtilities.invokeLater(() -> slitherPanel = new SlitherPanel(gameWindow));
         chat = new Chat();
+
+        settingsSetter.setParametersToObjects(gameWindow);
     }
 
     public void establishConnection(String username, String ip) {

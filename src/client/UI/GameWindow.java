@@ -8,7 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class GameWindow extends JFrame {
-    private static final Dimension frameSize = new Dimension(600,600);
+    private static final Dimension frameSize = new Dimension(900,600);
 
     private final GameManager gameManager;
     private final JPanel menuPanel = new JPanel();

@@ -21,23 +21,23 @@ public class ClientManager implements Runnable {
         myIp = String.valueOf(socket.getInetAddress());
         myPort = socket.getPort();
 
-        try{
-            out = new PrintWriter(socket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-            myName = in.readLine();
-        }catch (IOException ignored){}
     }
 
     @Override
     public void run() {
         try {
             //  Establish io streams
+            try{
+                out = new PrintWriter(socket.getOutputStream(), true);
+                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
+                myName = in.readLine();
+            }catch (IOException ignored){}
 
 
             while (true) {
                 String clientMessage = in.readLine();
+                System.out.println(clientMessage);
                 actionPerform(clientMessage);
             }
 
