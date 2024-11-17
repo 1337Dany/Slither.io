@@ -38,6 +38,7 @@ public class ClientManager implements Runnable {
 
             while (isRunning) {
                 String clientMessage = in.readLine();
+                System.out.println(clientMessage);
                 actionPerform(clientMessage);
             }
 
@@ -49,33 +50,21 @@ public class ClientManager implements Runnable {
 
     private void actionPerform(String message) {
         if(message.contains("admin s30050: ")){
-            server.sendMessageToEveryone("Admin message: " + message.substring(13));
+            server.sendMessageToEveryone("Admin message: " + message.substring(20));
            if (message.contains("kick: ")){
-                server.kickUser(message.substring(19));
+                server.kickUser(message.substring(26));
             }
-        }
-        if(!server.getBannedPhrases().containsBanPharases(message)) {
-            if (message.contains("Chat: ")) {
-
+        }else if(!server.getBannedPhrases().containsBanPharases(message)) {
+            if (message.contains("To all: ")) {
+                server.sendMessageToEveryone("To all: " +  "("+myName+"): " + message.substring(8));
             }
         }else{
-            sendMessage("Server: Inappropriate message detected");
+            sendMessage("Server: Inappropriate message detected in (" + message + ")");
         }
     }
 
     public void sendMessage(String message) {
         out.println(message);
-    }
-
-    public String getFullAddress() {
-        return myIp + ":" + myPort;
-    }
-
-    public String getName() {
-        return myName;
-    }
-    public void setRunning(boolean bool){
-        isRunning = bool;
     }
     public void closeConnection(){
         try {
@@ -84,5 +73,11 @@ public class ClientManager implements Runnable {
             out.close();
             isRunning = false;
         }catch (IOException ignored){}
+    }
+    public String getFullAddress() {
+        return myIp + ":" + myPort;
+    }
+    public String getName() {
+        return myName;
     }
 }

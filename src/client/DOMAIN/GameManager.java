@@ -43,25 +43,35 @@ public class GameManager {
         }
     }
 
-    public void sendMessageToServer(String message){
+    public void sendMessageToServer(String message) {
         client.sendMessage(message);
     }
 
     public void actionPerform(String message) {
         if (message.contains("Server: ")) {
             chatPanel.addMessage(message, Color.RED);
-        }else if(message.contains("Admin message: ")){
-            chatPanel.addMessage(message, new Color(148,0,211));
-        }
+        } else if (message.contains("Admin message: ")) {
+            chatPanel.addMessage(message, new Color(148, 0, 211));
+        } else if (message.contains("To ")){
+            if (message.contains("To all: ")) {
+                chatPanel.addMessage(message.substring(8), Color.WHITE);
+            }else {
 
+            }
+        }
     }
 
-    public void returnToMenu(){
+    public void returnToMenu() {
         gameWindow.remove(slitherPanel);
         gameWindow.showMenu();
         gameWindow.repaint();
     }
-    public void setChatPanel(ChatPanel chatPanel){
+
+    public void setChatPanel(ChatPanel chatPanel) {
         this.chatPanel = chatPanel;
+    }
+
+    public Client getClient() {
+        return client;
     }
 }

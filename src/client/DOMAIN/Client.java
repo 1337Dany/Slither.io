@@ -29,7 +29,6 @@ public class Client implements Runnable {
             new Thread(this).start();
             return true;
         } catch (IOException ignored) {
-            System.out.println(false);
             return false;
         }
 
@@ -39,7 +38,6 @@ public class Client implements Runnable {
         try {
             while (true){
                 String clientMessage = in.readLine();
-                System.out.println(clientMessage);
                 gameManager.actionPerform(clientMessage);
             }
         } catch (IOException exception) {
@@ -50,6 +48,9 @@ public class Client implements Runnable {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+    public String getUsername(){
+        return username;
     }
 
     public void setIp(String ip) {

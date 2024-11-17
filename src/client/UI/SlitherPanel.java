@@ -26,7 +26,14 @@ public class SlitherPanel extends JPanel {
     private void drawPanel(){
         this.setBackground(Color.DARK_GRAY);
         this.setLocation(0,0);
+        JLabel name = new JLabel(gameManager.getClient().getUsername());
+        name.setOpaque(false);
+        name.setForeground(Color.WHITE);
+        name.setHorizontalAlignment(SwingUtilities.CENTER);
+        name.setFont(new Font(name.getFont().getFontName(), Font.PLAIN, 30));
+        name.setBounds(this.getWidth()-200,0,200, 50);
 
+        this.add(name);
         gameWindow.add(this);
     }
     private void drawChat(){

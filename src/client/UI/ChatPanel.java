@@ -42,6 +42,8 @@ public class ChatPanel extends JPanel implements Runnable {
         add(scrollPane, BorderLayout.CENTER);
 
         userInput = new JTextArea("Tap to write a message...");
+        userInput.setWrapStyleWord(true);
+        userInput.setLineWrap(true);
         userInput.setOpaque(false);
         userInput.setForeground(Color.LIGHT_GRAY);
         add(userInput, BorderLayout.SOUTH);
@@ -51,7 +53,7 @@ public class ChatPanel extends JPanel implements Runnable {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 if(userInput.getText().equals("Tap to write a message...")){
-                    userInput.setText("");
+                    userInput.setText("To all: ");
                     userInput.setForeground(Color.WHITE);
                 }
             }
@@ -63,9 +65,8 @@ public class ChatPanel extends JPanel implements Runnable {
                     event.consume();
                     String checkMessage = userInput.getText();
                     if (!checkMessage.isEmpty()) {
-                        userInput.setText("");
-                        addMessage("Me: " + checkMessage, Color.WHITE);
-                        gameManager.sendMessageToServer("Chat: " + checkMessage);
+                        userInput.setText("To all: ");
+                        gameManager.sendMessageToServer(checkMessage);
                     }
                 }
             }
