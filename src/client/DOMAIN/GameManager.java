@@ -12,7 +12,6 @@ public class GameManager {
     private SlitherPanel slitherPanel;
     private final Client client = new Client();
     private ChatPanel chatPanel;
-    private Chat chat;
     private final SettingsSetter settingsSetter;
 
     public GameManager() {
@@ -25,8 +24,7 @@ public class GameManager {
     }
 
     public void startGame() {
-        SwingUtilities.invokeLater(() -> slitherPanel = new SlitherPanel(gameWindow, this));
-        chat = new Chat();
+        slitherPanel = new SlitherPanel(gameWindow, this);
 
         settingsSetter.setParametersToObjects(gameWindow);
     }
@@ -35,11 +33,11 @@ public class GameManager {
         client.setUsername(username);
         client.setIp(ip);
 
+        startGame();
         if (client.connect()) {
             gameWindow.hideMenu();
             gameWindow.repaint();
 
-            startGame();
         }
     }
 
@@ -57,6 +55,7 @@ public class GameManager {
                 chatPanel.addMessage(message.substring(8), Color.WHITE);
             }
         }else {
+            System.out.println(message);
             chatPanel.addMessage(message, Color.GREEN);
         }
     }

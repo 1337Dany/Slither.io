@@ -1,5 +1,7 @@
 package server.DOMAIN;
 
+import server.DATA.ChatHistory;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -57,6 +59,7 @@ public class ClientManager implements Runnable {
         }else if(!server.getBannedPhrases().containsBanPharases(message)) {
             if (message.contains("To ")) {
             if (message.contains("To all: ")) {
+                server.getChatHistory().addNote("To all: " + "(" + myName + "): " + message.substring(8));
                 server.sendMessageToEveryone("To all: " + "(" + myName + "): " + message.substring(8));
             }else {
                 server.sendMessageTo(message.substring(3), myName);
