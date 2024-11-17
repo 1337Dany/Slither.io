@@ -1,23 +1,24 @@
 package client.UI;
 
+import client.DOMAIN.GameManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class ChatPanel extends JPanel implements Runnable {
-    private final GameWindow gameWindow;
+    private final GameManager gameManager;
     private JPanel messagePanel;
     private JScrollPane scrollPane;
     private JTextArea userInput;
     private static final Dimension chatSize = new Dimension(300, 250);
 
-    public ChatPanel(GameWindow gameWindow) {
-        this.gameWindow = gameWindow;
+    public ChatPanel(GameManager gameManager) {
+        this.gameManager = gameManager;
         this.setSize(chatSize);
         this.setBackground(new Color(0, 0, 0, 125));
         this.setLayout(new BorderLayout());
-
         draw();
     }
 
@@ -46,20 +47,20 @@ public class ChatPanel extends JPanel implements Runnable {
             public void keyPressed(KeyEvent event) {
                 if (event.getKeyCode() == KeyEvent.VK_ENTER) {
                     event.consume();
-                    String checkMessage = userInput.getText().trim();
+                    String checkMessage = userInput.getText();
                     if (!checkMessage.isEmpty()) {
-                        addMessage("(Me): " + checkMessage);
                         userInput.setText("");
-                        //networkControl.sendMessage("Chat: " + checkMessage);
+                        addMessage("Me: " + checkMessage, Color.WHITE);
+                        gameManager.sendMessageToServer("Chat: " + checkMessage);
                     }
                 }
             }
         });
     }
 
-    public void addMessage(String message) {
+    public void addMessage(String message, Color color) {
         JLabel label = new JLabel(message);
-        label.setForeground(Color.WHITE);
+        label.setForeground(color);
         label.setOpaque(false);
         label.setFont(new Font(label.getFont().getFontName(), Font.PLAIN, 14));
 

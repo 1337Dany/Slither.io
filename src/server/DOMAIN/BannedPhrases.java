@@ -6,16 +6,10 @@ import java.io.IOException;
 
 public class BannedPhrases {
     BufferedReader reader;
-    public BannedPhrases(){
-        try {
-            reader = new BufferedReader(new FileReader("server/DATA/bannedPhrases"));
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-    }
     public boolean containsBanPharases(String clientMessage){
         String phrases;
         try {
+            reader = new BufferedReader(new FileReader("src/server/DATA/bannedPhrases"));
             phrases = reader.readLine();
 
             while (phrases != null){
@@ -27,7 +21,10 @@ public class BannedPhrases {
 
                 phrases = reader.readLine();
             }
-        }catch (IOException ignored){}
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
         return false;
     }
 }

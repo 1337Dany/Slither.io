@@ -1,20 +1,23 @@
 package client.UI;
 
-import client.DOMAIN.SettingsSetter;
+import client.DOMAIN.GameManager;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class SlitherPanel extends JPanel {
     private final GameWindow gameWindow;
+    private final GameManager gameManager;
     private ChatPanel chat;
-    public SlitherPanel(GameWindow gameWindow){
+    public SlitherPanel(GameWindow gameWindow, GameManager gameManager){
         this.gameWindow = gameWindow;
+        this.gameManager = gameManager;
         this.setSize(gameWindow.getSize());
         this.setLayout(null);
 
         drawPanel();
         drawChat();
+        gameManager.setChatPanel(chat);
 
         gameWindow.repaint();
         gameWindow.revalidate();
@@ -27,7 +30,7 @@ public class SlitherPanel extends JPanel {
         gameWindow.add(this);
     }
     private void drawChat(){
-        chat = new ChatPanel(gameWindow);
+        chat = new ChatPanel(gameManager);
         chat.setLocation(0,(this.getHeight() - chat.getHeight())/2);
 
         this.add(chat);

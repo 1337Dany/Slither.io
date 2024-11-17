@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Server {
+    private final BannedPhrases bannedPhrases = new BannedPhrases();
     private final static int port = 9999;
     static Map<String, ClientManager> clients = new HashMap<>();
 
@@ -38,8 +39,12 @@ public class Server {
             client.getValue().sendMessage(message);
         }
     }
-
+    public BannedPhrases getBannedPhrases(){
+        return bannedPhrases;
+    }
     public void kickUser(String name){
+        clients.get(name).setRunning(false);
         clients.remove(name);
+        System.out.println(name + " removed");
     }
 }

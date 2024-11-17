@@ -14,6 +14,7 @@ public class ClientManager implements Runnable {
     private String myName;
     private final String myIp;
     private final int myPort;
+    private boolean isRunning;
 
     public ClientManager(Server server, Socket socket) {
         this.server = server;
@@ -21,23 +22,22 @@ public class ClientManager implements Runnable {
         myIp = String.valueOf(socket.getInetAddress());
         myPort = socket.getPort();
 
+        //  Establish io streams
+        try{
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            myName = in.readLine();
+        }catch (IOException ignored){}
     }
 
     @Override
     public void run() {
         try {
-            //  Establish io streams
-            try{
-                out = new PrintWriter(socket.getOutputStream(), true);
-                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            isRunning = true;
 
-                myName = in.readLine();
-            }catch (IOException ignored){}
-
-
-            while (true) {
+            while (isRunning) {
                 String clientMessage = in.readLine();
-                System.out.println(clientMessage);
                 actionPerform(clientMessage);
             }
 
@@ -48,7 +48,13 @@ public class ClientManager implements Runnable {
     }
 
     private void actionPerform(String message) {
+        if(!server.getBannedPhrases().containsBanPharases(message)) {
+            if (message.contains("Chat: ")) {
 
+            }
+        }else{
+            sendMessage("Server: Inappropriate message detected");
+        }
     }
 
     public void sendMessage(String message) {
@@ -61,5 +67,8 @@ public class ClientManager implements Runnable {
 
     public String getName() {
         return myName;
+    }
+    public void setRunning(boolean bool){
+        isRunning = bool;
     }
 }

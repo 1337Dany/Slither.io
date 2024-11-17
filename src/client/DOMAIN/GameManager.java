@@ -1,14 +1,17 @@
 package client.DOMAIN;
 
+import client.UI.ChatPanel;
 import client.UI.GameWindow;
 import client.UI.SlitherPanel;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class GameManager {
     private GameWindow gameWindow;
     private SlitherPanel slitherPanel;
     private final Client client = new Client();
+    private ChatPanel chatPanel;
     private Chat chat;
     private final SettingsSetter settingsSetter;
 
@@ -22,7 +25,7 @@ public class GameManager {
     }
 
     public void startGame() {
-        SwingUtilities.invokeLater(() -> slitherPanel = new SlitherPanel(gameWindow));
+        SwingUtilities.invokeLater(() -> slitherPanel = new SlitherPanel(gameWindow, this));
         chat = new Chat();
 
         settingsSetter.setParametersToObjects(gameWindow);
@@ -40,10 +43,22 @@ public class GameManager {
         }
     }
 
+    public void sendMessageToServer(String message){
+        client.sendMessage(message);
+    }
+
+    public void actionPerform(String message) {
+        if (message.contains("Server: ")) {
+            chatPanel.addMessage(message, Color.RED);
+        }
+    }
+
     public void returnToMenu(){
         gameWindow.remove(slitherPanel);
         gameWindow.showMenu();
         gameWindow.repaint();
     }
-
+    public void setChatPanel(ChatPanel chatPanel){
+        this.chatPanel = chatPanel;
+    }
 }

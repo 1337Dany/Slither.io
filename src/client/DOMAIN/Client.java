@@ -38,7 +38,9 @@ public class Client implements Runnable {
     public void run() {
         try {
             while (true){
-                if(in.readLine().equals("Test"))System.out.println("test client");
+                String clientMessage = in.readLine();
+                System.out.println(clientMessage);
+                gameManager.actionPerform(clientMessage);
             }
         } catch (IOException exception) {
             System.out.println("Server disconnected");
@@ -53,8 +55,6 @@ public class Client implements Runnable {
     public void setIp(String ip) {
         this.ip = ip;
     }
-
-
     public void sendMessage(String message){
         out.println(message);
     }
