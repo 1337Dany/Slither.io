@@ -50,7 +50,10 @@ public class GameManager {
     public void actionPerform(String message) {
         if (message.contains("Server: ")) {
             chatPanel.addMessage(message, Color.RED);
+        }else if(message.contains("Admin message: ")){
+            chatPanel.addMessage(message, new Color(148,0,211));
         }
+
     }
 
     public void returnToMenu(){

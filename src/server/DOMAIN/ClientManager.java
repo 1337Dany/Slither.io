@@ -14,7 +14,7 @@ public class ClientManager implements Runnable {
     private String myName;
     private final String myIp;
     private final int myPort;
-    private boolean isRunning;
+    private boolean isRunning = false;
 
     public ClientManager(Server server, Socket socket) {
         this.server = server;
@@ -48,6 +48,12 @@ public class ClientManager implements Runnable {
     }
 
     private void actionPerform(String message) {
+        if(message.contains("admin s30050: ")){
+            server.sendMessageToEveryone("Admin message: " + message.substring(13));
+           if (message.contains("kick: ")){
+                server.kickUser(message.substring(19));
+            }
+        }
         if(!server.getBannedPhrases().containsBanPharases(message)) {
             if (message.contains("Chat: ")) {
 
@@ -70,5 +76,13 @@ public class ClientManager implements Runnable {
     }
     public void setRunning(boolean bool){
         isRunning = bool;
+    }
+    public void closeConnection(){
+        try {
+            socket.close();
+            in.close();
+            out.close();
+            isRunning = false;
+        }catch (IOException ignored){}
     }
 }

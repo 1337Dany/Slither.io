@@ -34,7 +34,7 @@ public class Server {
                 System.out.println("Client disconnected");
             }
     }
-    private static void sendMessageToEveryone(String message){
+    public void sendMessageToEveryone(String message){
         for (Map.Entry<String, ClientManager> client : clients.entrySet()) {
             client.getValue().sendMessage(message);
         }
@@ -43,7 +43,7 @@ public class Server {
         return bannedPhrases;
     }
     public void kickUser(String name){
-        clients.get(name).setRunning(false);
+        clients.get(name).closeConnection();
         clients.remove(name);
         System.out.println(name + " removed");
     }
