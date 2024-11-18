@@ -45,12 +45,12 @@ public class GameManager {
     }
 
     public void actionPerform(String message) {
-        if (message.contains("Server: ")) {
+        if (message.startsWith("Server: ")) {
             chatPanel.addMessage(message, Color.RED);
-        } else if (message.contains("Admin message: ")) {
+        } else if (message.startsWith("Admin message: ")) {
             chatPanel.addMessage(message, new Color(148, 0, 211));
-        } else if (message.contains("To ")){
-            if (message.contains("To all: ")) {
+        } else if (message.startsWith("To ")){
+            if (message.startsWith("To all: ")) {
                 chatPanel.addMessage(message.substring(8), Color.WHITE);
             }
         }else {

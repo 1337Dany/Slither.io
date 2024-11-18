@@ -58,15 +58,18 @@ public class ClientManager implements Runnable {
                 server.kickUser(message.substring(20));
             }
         } else if (!server.getBannedPhrases().containsBanPharases(message)) {
-            if (message.contains("To ")) {
-                if (message.contains("To all: ")) {
+            if (message.startsWith("To ")) {
+                if (message.startsWith("To all: ")) {
                     server.getChatHistory().addNote("To all: " + "(" + myName + "): " + message.substring(8));
                     server.sendMessageToEveryone("To all: " + "(" + myName + "): " + message.substring(8));
-                } else if (message.contains("To not ")) {
+                } else if (message.startsWith("To not ")) {
                     server.sendMessageToEveryoneExceptOne(message.substring(7),myName);
                 } else {
                     server.sendMessageTo(message.substring(3), myName);
                 }
+            }else {
+                server.getChatHistory().addNote("To all: " + "(" + myName + "): " + message);
+                server.sendMessageToEveryone("To all: " + "(" + myName + "): " + message);
             }
         } else {
             sendMessage("Server: Inappropriate message detected in (" + message + ")");
