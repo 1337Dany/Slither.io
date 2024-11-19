@@ -29,11 +29,9 @@ public class Server {
                 ClientManager clientManager = new ClientManager(this, clientSocket);
 
                 //  Check of existing player with the same name
-                if(clients.containsKey(clientManager.getName())){
+                if(clients.containsKey(clientManager.getName())) {
                     clientManager.sendMessage("Server: player with this name is already exist");
                     clientManager.closeConnection();
-                }else{
-
                 }
 
                 clientManager.sendMessage("Server: connection established!");
