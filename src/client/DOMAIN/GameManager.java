@@ -36,7 +36,8 @@ public class GameManager {
         if (client.connect()) {
             gameWindow.hideMenu();
             gameWindow.repaint();
-
+        }else{
+            gameWindow.wrongServer();
         }
     }
 
@@ -45,24 +46,33 @@ public class GameManager {
     }
 
     public void actionPerform(String message) {
-        if (message.startsWith("Server: ")) {
-            chatPanel.addMessage(message, Color.RED);
-        } else if (message.startsWith("Admin message: ")) {
-            chatPanel.addMessage(message, new Color(148, 0, 211));
-        } else if (message.startsWith("To ")){
-            if (message.startsWith("To all: ")) {
-                chatPanel.addMessage(message.substring(8), Color.WHITE);
+        try {
+            if (message.startsWith("Server: ")) {
+                chatPanel.addMessage(message, Color.RED);
+            } else if (message.startsWith("Admin message: ")) {
+                chatPanel.addMessage(message, new Color(148, 0, 211));
+            } else if (message.startsWith("To ")) {
+                if (message.startsWith("To all: ")) {
+                    chatPanel.addMessage(message.substring(8), Color.WHITE);
+                }
+            } else {
+                System.out.println(message);
+                chatPanel.addMessage(message, Color.GREEN);
             }
-        }else {
-            System.out.println(message);
-            chatPanel.addMessage(message, Color.GREEN);
+        }catch (NullPointerException e){
+            System.out.println("Server disconnected you");
+            client.closeConnection();
+            returnToMenu();
         }
     }
-
+    public void wrongName(){
+        gameWindow.wrongName();
+    }
     public void returnToMenu() {
         gameWindow.remove(slitherPanel);
         gameWindow.showMenu();
         gameWindow.repaint();
+        gameWindow.revalidate();
     }
 
     public void setChatPanel(ChatPanel chatPanel) {

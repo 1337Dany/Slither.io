@@ -27,8 +27,19 @@ public class Server {
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 ClientManager clientManager = new ClientManager(this, clientSocket);
+
+                //  Check of existing player with the same name
+                if(clients.containsKey(clientManager.getName())){
+                    clientManager.sendMessage("Server: player with this name is already exist");
+                    clientManager.closeConnection();
+                }else{
+
+                }
+
+                clientManager.sendMessage("Server: connection established!");
                 sendMessageToEveryone("Server: " + clientManager.getName() + " connected!");
 
+                //  send all chat data to new user
                 String tmp;
                 while ((tmp = chatHistory.getNextTextArea()) != null) {
                     clientManager.sendMessage(tmp);

@@ -26,9 +26,19 @@ public class Client implements Runnable {
             out = new PrintWriter(serverSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
             sendMessage(username);
+
+            String tmp;
+            if(!(tmp = in.readLine()).equals("Server: connection established!")){
+                if(tmp.equals("Server: player with this name is already exist")){
+                    gameManager.wrongName();
+                }else {
+                    return false;
+                }
+            }
+
             new Thread(this).start();
             return true;
-        } catch (IOException ignored) {
+        } catch (IOException e) {
             return false;
         }
 
@@ -45,7 +55,14 @@ public class Client implements Runnable {
             gameManager.returnToMenu();
         }
     }
+    public void closeConnection(){
+        try {
+            serverSocket.close();
+            in.close();
+            out.close();
+        }catch (IOException ignored){}
 
+    }
     public void setUsername(String username) {
         this.username = username;
     }

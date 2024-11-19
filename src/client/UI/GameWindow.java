@@ -8,19 +8,22 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class GameWindow extends JFrame {
-    private static final Dimension frameSize = new Dimension(900,600);
+    private static final Dimension frameSize = new Dimension(900, 600);
 
     private final GameManager gameManager;
     private final JPanel menuPanel = new JPanel();
+    private final JLabel serverWrongIp = new JLabel();
+    private final JLabel serverWrongName = new JLabel();
     private final JButton playButton = new JButton("Play");
 
     public GameWindow(GameManager gameManager) {
         this.gameManager = gameManager;
     }
+
     public void openMainJFrame() {
-            this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            this.setSize(frameSize);
-            this.setLayout(null);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setSize(frameSize);
+        this.setLayout(null);
 
         drawMenu();
     }
@@ -30,7 +33,7 @@ public class GameWindow extends JFrame {
         menuPanel.setLayout(null);
 
         menuPanel.setSize(frameSize);
-        menuPanel.setLocation(0,0);
+        menuPanel.setLocation(0, 0);
 
         JLabel logo = new JLabel("Slither.io");
         logo.setHorizontalAlignment(SwingUtilities.CENTER);
@@ -46,11 +49,22 @@ public class GameWindow extends JFrame {
         JLabel enterIP = new JLabel("Enter IP:");
         enterIP.setForeground(Color.CYAN);
         enterIP.setFont(new Font(enterIP.getFont().getFontName(), Font.PLAIN, 30));
-        enterIP.setBounds(
+        enterIP.setLocation(
                 0,
-                logo.getY() + logo.getHeight() + 50,
-                menuPanel.getWidth(),
-                (int) (0.1 * menuPanel.getHeight())
+                logo.getY() + logo.getHeight() + 50
+        );
+        enterIP.setSize(
+                (int) (enterIP.getPreferredSize().getWidth() + 20),
+                (int) enterIP.getPreferredSize().getHeight()
+        );
+
+
+        serverWrongIp.setForeground(Color.RED);
+        serverWrongIp.setFont(new Font(enterIP.getFont().getFontName(), Font.PLAIN, 30));
+        serverWrongIp.setLocation(enterIP.getWidth(), enterIP.getY());
+        serverWrongIp.setSize(
+                menuPanel.getWidth() - enterIP.getWidth(),
+                enterIP.getHeight()
         );
 
         JTextArea ip = new JTextArea("\\\\.....");
@@ -58,7 +72,7 @@ public class GameWindow extends JFrame {
         ip.setBackground(Color.DARK_GRAY);
         ip.setFont(new Font(ip.getFont().getFontName(), Font.PLAIN, 30));
         ip.setBounds(
-                menuPanel.getWidth()/2-(menuPanel.getWidth() - 100)/2,
+                menuPanel.getWidth() / 2 - (menuPanel.getWidth() - 100) / 2,
                 enterIP.getY() + enterIP.getHeight() + 10,
                 menuPanel.getWidth() - 100,
                 (int) (0.1 * menuPanel.getHeight())
@@ -67,11 +81,21 @@ public class GameWindow extends JFrame {
         JLabel enterName = new JLabel("Enter your name:");
         enterName.setForeground(Color.CYAN);
         enterName.setFont(new Font(enterName.getFont().getFontName(), Font.PLAIN, 30));
-        enterName.setBounds(
+        enterName.setLocation(
                 0,
-                ip.getY() + ip.getHeight() + 10,
-                menuPanel.getWidth(),
-                (int) (0.1 * menuPanel.getHeight())
+                ip.getY() + ip.getHeight() + 10
+        );
+        enterName.setSize(
+                (int) (enterName.getPreferredSize().getWidth() + 40),
+                (int) enterName.getPreferredSize().getHeight()
+        );
+
+        serverWrongName.setForeground(Color.RED);
+        serverWrongName.setFont(new Font(enterIP.getFont().getFontName(), Font.PLAIN, 30));
+        serverWrongName.setLocation(enterName.getWidth(), enterName.getY());
+        serverWrongName.setSize(
+                menuPanel.getWidth() - enterName.getWidth(),
+                enterName.getHeight()
         );
 
         JTextArea name = new JTextArea("\\\\.....");
@@ -88,7 +112,7 @@ public class GameWindow extends JFrame {
         SwingUtilities.invokeLater(() -> name.setCaretPosition(name.getDocument().getLength()));
 
         scrollPane.setBounds(
-                menuPanel.getWidth()/2-(menuPanel.getWidth() - 100)/2,
+                menuPanel.getWidth() / 2 - (menuPanel.getWidth() - 100) / 2,
                 enterName.getY() + enterName.getHeight() + 10,
                 menuPanel.getWidth() - 100,
                 (int) (0.1 * menuPanel.getHeight())
@@ -96,7 +120,7 @@ public class GameWindow extends JFrame {
 
         playButton.setFont(new Font(name.getFont().getFontName(), Font.PLAIN, 30));
         playButton.setBounds(
-                menuPanel.getWidth()/2 - 200/2,
+                menuPanel.getWidth() / 2 - 200 / 2,
                 scrollPane.getY() + scrollPane.getHeight() + 10,
                 200,
                 50
@@ -106,10 +130,10 @@ public class GameWindow extends JFrame {
         ip.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(ip.getText().equals("\\\\.....")){
+                if (ip.getText().equals("\\\\.....")) {
                     ip.setText("");
                 }
-                if(name.getText().equals("")){
+                if (name.getText().equals("")) {
                     name.setText("\\\\.....");
                 }
             }
@@ -118,10 +142,10 @@ public class GameWindow extends JFrame {
         name.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(name.getText().equals("\\\\.....")){
+                if (name.getText().equals("\\\\.....")) {
                     name.setText("");
                 }
-                if(ip.getText().equals("")){
+                if (ip.getText().equals("")) {
                     ip.setText("\\\\.....");
                 }
             }
@@ -152,17 +176,32 @@ public class GameWindow extends JFrame {
 
         menuPanel.add(playButton);
         menuPanel.add(scrollPane);
+        menuPanel.add(serverWrongName);
         menuPanel.add(enterName);
         menuPanel.add(ip);
+        menuPanel.add(serverWrongIp);
         menuPanel.add(enterIP);
         menuPanel.add(logo);
         showMenu();
     }
 
-    public void hideMenu(){
+    public void wrongName() {
+        serverWrongName.setText("Player with this name already exist");
+        repaint();
+        revalidate();
+    }
+
+    public void wrongServer() {
+        serverWrongIp.setText("Can not connect to this server");
+        this.repaint();
+        this.revalidate();
+    }
+
+    public void hideMenu() {
         this.remove(menuPanel);
     }
-    public void showMenu(){
+
+    public void showMenu() {
         this.add(menuPanel);
     }
 
