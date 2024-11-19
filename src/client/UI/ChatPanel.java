@@ -52,7 +52,7 @@ public class ChatPanel extends JPanel implements Runnable {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                if(userInput.getText().equals("Tap to write a message...")){
+                if (userInput.getText().equals("Tap to write a message...")) {
                     userInput.setText("To all: ");
                     userInput.setForeground(Color.WHITE);
                 }
@@ -79,8 +79,10 @@ public class ChatPanel extends JPanel implements Runnable {
 
         JTextArea messageLabel = new JTextArea(message);
         messageLabel.setEditable(false);
+        messageLabel.setFocusable(false);
         messageLabel.setWrapStyleWord(true);
         messageLabel.setLineWrap(true);
+        messageLabel.setBackground(new Color(0, 255, 255, 125));
         messageLabel.setOpaque(false);
         messageLabel.setForeground(color);
         messageLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -90,6 +92,25 @@ public class ChatPanel extends JPanel implements Runnable {
         messagePanel.revalidate();
         messagePanel.repaint();
 
+        messageLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                messageLabel.setOpaque(true);
+                messageLabel.repaint();
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                messageLabel.setOpaque(false);
+                messageLabel.repaint();
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e){
+
+            }
+        });
+
         // Automatically scrolling to the newest messages
         SwingUtilities.invokeLater(() -> {
                     scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
@@ -97,6 +118,7 @@ public class ChatPanel extends JPanel implements Runnable {
                 }
         );
     }
+
     private void makeScrollBarTransparent(JScrollPane scrollPane) {
         JScrollBar verticalBar = scrollPane.getVerticalScrollBar();
 
