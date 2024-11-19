@@ -7,7 +7,7 @@ import client.UI.SlitherPanel;
 import java.awt.*;
 
 public class GameManager {
-    private GameWindow gameWindow;
+    private final GameWindow gameWindow;
     private SlitherPanel slitherPanel;
     private final Client client = new Client();
     private ChatPanel chatPanel;
