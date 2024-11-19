@@ -60,7 +60,6 @@ public class GameManager {
                 chatPanel.addMessage(message, Color.GREEN);
             }
         }catch (NullPointerException e){
-            System.out.println("Server disconnected you");
             client.closeConnection();
             returnToMenu();
         }

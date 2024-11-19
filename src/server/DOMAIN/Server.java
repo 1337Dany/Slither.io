@@ -32,6 +32,7 @@ public class Server {
                 if(clients.containsKey(clientManager.getName())) {
                     clientManager.sendMessage("Server: player with this name is already exist");
                     clientManager.closeConnection();
+                    continue;
                 }
 
                 clientManager.sendMessage("Server: connection established!");
