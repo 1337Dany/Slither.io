@@ -34,7 +34,9 @@ public class Server {
                     continue;
                 }
 
+
                 clientManager.sendMessage("Server: connection established!");
+                clientManager.sendMessage("Server: do not use this phrases in chat! ->" + bannedPhrases.getAllBanPhrases());
                 sendMessageToEveryone("Server: " + clientManager.getName() + " connected!");
 
                 //  send all chat data to new user
