@@ -43,7 +43,7 @@ public class SlitherPanel extends JPanel {
         gameWindow.add(this);
     }
     private void drawChat(){
-        chat = new ChatPanel(gameManager);
+        chat = new ChatPanel(gameManager, gameWindow);
         chat.setLocation(0,(this.getHeight() - chat.getHeight())/2);
 
         this.add(chat);

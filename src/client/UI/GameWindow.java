@@ -15,6 +15,7 @@ public class GameWindow extends JFrame {
     private final JLabel serverWrongIp = new JLabel();
     private final JLabel serverWrongName = new JLabel();
     private final JButton playButton = new JButton("Play");
+    private ActionDialog actionDialog;
 
     public GameWindow(GameManager gameManager) {
         this.gameManager = gameManager;
@@ -26,6 +27,10 @@ public class GameWindow extends JFrame {
         this.setLayout(null);
 
         drawMenu();
+
+        actionDialog = new ActionDialog();
+        add(actionDialog);
+
     }
 
     private void drawMenu() {
@@ -173,7 +178,6 @@ public class GameWindow extends JFrame {
             }
         });
 
-
         menuPanel.add(playButton);
         menuPanel.add(scrollPane);
         menuPanel.add(serverWrongName);
@@ -204,5 +208,7 @@ public class GameWindow extends JFrame {
     public void showMenu() {
         this.add(menuPanel);
     }
-
+    public ActionDialog getActionDialog(){
+        return actionDialog;
+    }
 }

@@ -1,5 +1,6 @@
 package client.DOMAIN;
 
+import client.UI.ActionDialog;
 import client.UI.ChatPanel;
 import client.UI.GameWindow;
 import client.UI.SlitherPanel;

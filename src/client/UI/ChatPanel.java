@@ -11,22 +11,26 @@ import java.awt.event.MouseEvent;
 
 public class ChatPanel extends JPanel implements Runnable {
     private final GameManager gameManager;
+    private final GameWindow gameWindow;
     private JPanel messagePanel;
     private JScrollPane scrollPane;
     private JTextArea userInput;
-    private static final Dimension chatSize = new Dimension(300, 250);
+    private static final Dimension chatSize = new Dimension(300, 300);
 
-    public ChatPanel(GameManager gameManager) {
+    public ChatPanel(GameManager gameManager, GameWindow gameWindow) {
         this.gameManager = gameManager;
+        this.gameWindow = gameWindow;
         this.setSize(chatSize);
         this.setBackground(new Color(0, 0, 0, 125));
         this.setLayout(new BorderLayout());
+
         draw();
     }
 
     private void draw() {
         setLayout(new BorderLayout());
         setBackground(new Color(0, 0, 0, 125));
+        gameWindow.getActionDialog().setChatPanel(this);
 
         messagePanel = new JPanel();
         messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.Y_AXIS));
@@ -48,10 +52,11 @@ public class ChatPanel extends JPanel implements Runnable {
         userInput.setForeground(Color.LIGHT_GRAY);
         add(userInput, BorderLayout.SOUTH);
 
+
+
         userInput.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
                 if (userInput.getText().equals("Tap to write a message...")) {
                     userInput.setText("To all: ");
                     userInput.setForeground(Color.WHITE);
@@ -77,37 +82,47 @@ public class ChatPanel extends JPanel implements Runnable {
 
         System.out.println(message);
 
-        JTextArea messageLabel = new JTextArea(message);
-        messageLabel.setEditable(false);
-        messageLabel.setFocusable(false);
-        messageLabel.setWrapStyleWord(true);
-        messageLabel.setLineWrap(true);
-        messageLabel.setBackground(new Color(0, 255, 255, 125));
-        messageLabel.setOpaque(false);
-        messageLabel.setForeground(color);
-        messageLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        messageLabel.setFont(new Font(messageLabel.getFont().getFontName(), Font.PLAIN, 14));
+        JTextArea messageArea = new JTextArea(message);
+        messageArea.setEditable(false);
+        messageArea.setFocusable(false);
+        messageArea.setWrapStyleWord(true);
+        messageArea.setLineWrap(true);
+        messageArea.setBackground(new Color(0, 255, 255, 100));
+        messageArea.setOpaque(false);
+        messageArea.setForeground(color);
+        messageArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        messageArea.setFont(new Font(messageArea.getFont().getFontName(), Font.PLAIN, 14));
 
-        messagePanel.add(messageLabel);
+        messagePanel.add(messageArea);
         messagePanel.revalidate();
         messagePanel.repaint();
 
-        messageLabel.addMouseListener(new MouseAdapter() {
+        messageArea.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                messageLabel.setOpaque(true);
-                messageLabel.repaint();
+                messageArea.setOpaque(true);
+                messageArea.repaint();
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                messageLabel.setOpaque(false);
-                messageLabel.repaint();
+                messageArea.setOpaque(false);
+                messageArea.repaint();
             }
 
             @Override
             public void mouseClicked(MouseEvent e){
+                try {
+                    gameWindow.getActionDialog().setReceiver(message.substring(message.indexOf('(') + 1, message.indexOf(')')));
+                }catch (StringIndexOutOfBoundsException exception){return;}
+                Point mouseLocation = SwingUtilities.convertPoint((Component) e.getSource(), e.getPoint(), ChatPanel.this);
 
+                gameWindow.getActionDialog().setLocation(
+                        mouseLocation.x,
+                        (int) (mouseLocation.y + chatSize.getHeight()/2)
+                );
+                gameWindow.getActionDialog().setVisible(true);
+                repaint();
             }
         });
 
@@ -130,5 +145,8 @@ public class ChatPanel extends JPanel implements Runnable {
         //  Thread for only graphical interface
 
 
+    }
+    public JTextArea getUserInput(){
+        return userInput;
     }
 }

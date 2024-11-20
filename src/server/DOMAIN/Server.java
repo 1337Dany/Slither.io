@@ -61,11 +61,15 @@ public class Server {
     }
 
     public void sendMessageTo(String message, String from) {
-        String[] names = message.split(":", 2);
-        for (String name : (names[0].split(","))) {
-            clients.get(name).sendMessage("(" + from + ") -> : " + names[1]);
+        try {
+            String[] names = message.split(":", 2);
+            for (String name : (names[0].split(","))) {
+                clients.get(name).sendMessage("(" + from + ") -> : " + names[1]);
+            }
+            clients.get(from).sendMessage(" -> (" + names[0] + "): " + names[1]);
+        }catch (NullPointerException e){
+            clients.get(from).sendMessage("Server: there is no user with this name");
         }
-        clients.get(from).sendMessage(" -> <" + names[0] + ">: " + names[1]);
     }
 
     public void sendMessageToEveryoneExceptOne(String message, String from) {
@@ -82,7 +86,7 @@ public class Server {
             }
         }
 
-        clients.get(from).sendMessage(" -> not to <" + names[0] + ">: " + names[1]);
+        clients.get(from).sendMessage(" -> not to (" + names[0] + "): " + names[1]);
     }
 
     public ChatHistory getChatHistory() {
