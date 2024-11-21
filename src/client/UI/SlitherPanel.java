@@ -4,11 +4,13 @@ import client.DOMAIN.GameManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
 public class SlitherPanel extends JPanel {
     private final GameWindow gameWindow;
     private final GameManager gameManager;
     private ChatPanel chat;
+    private static PlayerList playerList;
     public SlitherPanel(GameWindow gameWindow, GameManager gameManager){
         this.gameWindow = gameWindow;
         this.gameManager = gameManager;
@@ -17,6 +19,7 @@ public class SlitherPanel extends JPanel {
 
         drawChat();
         drawPanel();
+        drawPlayerList();
 
         gameManager.setChatPanel(chat);
 
@@ -47,6 +50,23 @@ public class SlitherPanel extends JPanel {
         chat.setLocation(0,(this.getHeight() - chat.getHeight())/2);
 
         this.add(chat);
+    }
+
+    private void drawPlayerList(){
+        playerList = new PlayerList(this);
+
+        InputMap inputMap = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = this.getActionMap();
+
+        inputMap.put(KeyStroke.getKeyStroke("TAB"), "handleTab");
+        actionMap.put("handleTab", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                callPlayerList();
+            }
+        });
+
+        this.add(playerList);
     }
 
     @Override
@@ -90,5 +110,13 @@ public class SlitherPanel extends JPanel {
         }
 
         g2.drawPolygon(xPoints, yPoints, 6);
+    }
+
+    public static void callPlayerList(){
+        if (playerList.getIsVisible()){
+            playerList.hidePlayerList();
+        }else {
+            playerList.showPlayerList();
+        }
     }
 }

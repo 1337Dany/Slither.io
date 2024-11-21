@@ -36,7 +36,18 @@ public class Server {
 
 
                 clientManager.sendMessage("Server: connection established!");
-                clientManager.sendMessage("Server: do not use this phrases in chat! ->" + bannedPhrases.getAllBanPhrases());
+                clientManager.sendMessage("""
+                        Server: Commands:
+                         To ....: -> send message to group or person
+                         To not ....: -> send message to everyone except this group or person
+                         To all: ....: -> send message to everyone
+                        
+                         Keys:
+                         TAB -> show list of players
+                        
+                        Server: Rules:
+                         do not use this phrases in chat! ->\s"""+ bannedPhrases.getAllBanPhrases()
+                        );
                 sendMessageToEveryone("Server: " + clientManager.getName() + " connected!");
 
                 //  send all chat data to new user

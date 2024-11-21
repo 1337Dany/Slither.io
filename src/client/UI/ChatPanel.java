@@ -53,7 +53,6 @@ public class ChatPanel extends JPanel implements Runnable {
         add(userInput, BorderLayout.SOUTH);
 
 
-
         userInput.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -73,6 +72,9 @@ public class ChatPanel extends JPanel implements Runnable {
                         userInput.setText("To all: ");
                         gameManager.sendMessageToServer(checkMessage);
                     }
+                } else if (event.getKeyCode() == KeyEvent.VK_TAB) {
+                    event.consume();
+                    SlitherPanel.callPlayerList();
                 }
             }
         });
@@ -111,15 +113,17 @@ public class ChatPanel extends JPanel implements Runnable {
             }
 
             @Override
-            public void mouseClicked(MouseEvent e){
+            public void mouseClicked(MouseEvent e) {
                 try {
                     gameWindow.getActionDialog().setReceiver(message.substring(message.indexOf('(') + 1, message.indexOf(')')));
-                }catch (StringIndexOutOfBoundsException exception){return;}
+                } catch (StringIndexOutOfBoundsException exception) {
+                    return;
+                }
                 Point mouseLocation = SwingUtilities.convertPoint((Component) e.getSource(), e.getPoint(), ChatPanel.this);
 
                 gameWindow.getActionDialog().setLocation(
                         mouseLocation.x,
-                        (int) (mouseLocation.y + chatSize.getHeight()/2)
+                        (int) (mouseLocation.y + chatSize.getHeight() / 2)
                 );
                 gameWindow.getActionDialog().setVisible(true);
                 repaint();
@@ -146,7 +150,8 @@ public class ChatPanel extends JPanel implements Runnable {
 
 
     }
-    public JTextArea getUserInput(){
+
+    public JTextArea getUserInput() {
         return userInput;
     }
 }
