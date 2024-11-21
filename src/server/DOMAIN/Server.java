@@ -33,9 +33,14 @@ public class Server {
                     clientManager.closeConnection();
                     continue;
                 }
-
-
                 clientManager.sendMessage("Server: connection established!");
+
+                sendMessageToEveryone("System: new game member: " + clientManager.getName());
+
+                for (Map.Entry<String, ClientManager> client : clients.entrySet()) {
+                    clientManager.sendMessage("System: download names: " + client.getKey());
+                }
+
                 clientManager.sendMessage("""
                         Server: Commands:
                          To ....: -> send message to group or person
@@ -48,7 +53,6 @@ public class Server {
                         Server: Rules:
                          do not use this phrases in chat! ->\s"""+ bannedPhrases.getAllBanPhrases()
                         );
-                sendMessageToEveryone("Server: " + clientManager.getName() + " connected!");
 
                 //  send all chat data to new user
                 String tmp;
@@ -114,5 +118,7 @@ public class Server {
         clients.get(name).closeConnection();
         clients.remove(name);
         System.out.println(name + " removed");
+
+        sendMessageToEveryone("System: kick: " + name);
     }
 }

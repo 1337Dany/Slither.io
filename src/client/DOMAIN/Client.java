@@ -31,7 +31,6 @@ public class Client implements Runnable {
             if(!(tmp = in.readLine()).equals("Server: connection established!")){
                 if(tmp.equals("Server: player with this name is already exist")){
                     gameManager.wrongName();
-                }else {
                     return false;
                 }
             }

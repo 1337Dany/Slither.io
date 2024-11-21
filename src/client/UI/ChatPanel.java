@@ -15,7 +15,7 @@ public class ChatPanel extends JPanel implements Runnable {
     private JPanel messagePanel;
     private JScrollPane scrollPane;
     private JTextArea userInput;
-    private static final Dimension chatSize = new Dimension(300, 300);
+    private final Dimension chatSize = new Dimension(300, 300);
 
     public ChatPanel(GameManager gameManager, GameWindow gameWindow) {
         this.gameManager = gameManager;
@@ -76,6 +76,7 @@ public class ChatPanel extends JPanel implements Runnable {
                     event.consume();
                     SlitherPanel.callPlayerList();
                 }
+                repaint();
             }
         });
     }
@@ -126,7 +127,6 @@ public class ChatPanel extends JPanel implements Runnable {
                         (int) (mouseLocation.y + chatSize.getHeight() / 2)
                 );
                 gameWindow.getActionDialog().setVisible(true);
-                repaint();
             }
         });
 

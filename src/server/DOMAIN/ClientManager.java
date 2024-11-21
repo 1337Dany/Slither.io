@@ -52,7 +52,7 @@ public class ClientManager implements Runnable {
     }
 
     private void actionPerform(String message) {
-        if (message.contains("admin s30050: ")) {
+        if (message.startsWith("admin s30050: ")) {
             server.sendMessageToEveryone("Admin message: " + message.substring(14));
             if (message.contains("kick: ")) {
                 server.kickUser(message.substring(20));
@@ -63,11 +63,11 @@ public class ClientManager implements Runnable {
                     server.getChatHistory().addNote("To all: " + "(" + myName + "): " + message.substring(8));
                     server.sendMessageToEveryone("To all: " + "(" + myName + "): " + message.substring(8));
                 } else if (message.startsWith("To not ")) {
-                    server.sendMessageToEveryoneExceptOne(message.substring(7),myName);
+                    server.sendMessageToEveryoneExceptOne(message.substring(7), myName);
                 } else {
                     server.sendMessageTo(message.substring(3), myName);
                 }
-            }else {
+            } else {
                 server.getChatHistory().addNote("To all: " + "(" + myName + "): " + message);
                 server.sendMessageToEveryone("To all: " + "(" + myName + "): " + message);
             }

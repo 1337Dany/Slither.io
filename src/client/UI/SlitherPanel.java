@@ -37,7 +37,7 @@ public class SlitherPanel extends JPanel {
         name.setLineWrap(true);
         name.setOpaque(false);
         name.setForeground(Color.WHITE);
-        name.setBounds(space,space,gameWindow.getWidth()-space*2, gameWindow.getHeight()-space*2);
+        name.setBounds(gameWindow.getWidth() - space - gameWindow.getWidth()/2,space,gameWindow.getWidth()/2, gameWindow.getHeight()-space*2);
         name.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         name.setEditable(false);
         name.setFocusable(false);
@@ -48,12 +48,11 @@ public class SlitherPanel extends JPanel {
     private void drawChat(){
         chat = new ChatPanel(gameManager, gameWindow);
         chat.setLocation(0,(this.getHeight() - chat.getHeight())/2);
-
         this.add(chat);
     }
 
     private void drawPlayerList(){
-        playerList = new PlayerList(this);
+        playerList = new PlayerList(this, gameWindow);
 
         InputMap inputMap = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         ActionMap actionMap = this.getActionMap();
@@ -67,6 +66,12 @@ public class SlitherPanel extends JPanel {
         });
 
         this.add(playerList);
+    }
+    public void addGamer(String name){
+        playerList.addPlayer(name);
+    }
+    public void removePlayer(String name){
+        playerList.removePlayer(name);
     }
 
     @Override

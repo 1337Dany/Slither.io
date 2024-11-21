@@ -4,6 +4,8 @@ import client.DOMAIN.SettingsSetter;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -109,6 +111,15 @@ public class ActionDialog extends JPanel {
                 chatPanel.getUserInput().setText("To not " + receiver + ": ");
                 setVisible(false);
                 repaint();
+            }
+        });
+
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+                    setVisible(false);
+                }
             }
         });
     }
