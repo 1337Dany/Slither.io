@@ -1,6 +1,5 @@
-package server.DATA;
+package server.data;
 
-import javax.swing.*;
 import java.util.ArrayList;
 
 public record ChatHistory() {

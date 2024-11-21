@@ -1,6 +1,6 @@
-package server.DOMAIN;
+package server.domain;
 
-import server.DATA.ChatHistory;
+import server.data.Server;
 
 import java.io.BufferedReader;
 import java.io.IOException;

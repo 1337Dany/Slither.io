@@ -1,9 +1,9 @@
-package client.DOMAIN;
+package client.domain;
 
-import client.UI.ActionDialog;
-import client.UI.ChatPanel;
-import client.UI.GameWindow;
-import client.UI.SlitherPanel;
+import client.data.Client;
+import client.ui.ChatPanel;
+import client.ui.GameWindow;
+import client.ui.SlitherPanel;
 
 import java.awt.*;
 

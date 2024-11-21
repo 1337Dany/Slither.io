@@ -1,4 +1,6 @@
-package client.DOMAIN;
+package client.data;
+
+import client.domain.GameManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,6 +1,6 @@
-package client.UI;
+package client.ui;
 
-import client.DOMAIN.SettingsSetter;
+import client.domain.SettingsSetter;
 
 import javax.swing.*;
 import java.awt.*;

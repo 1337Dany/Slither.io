@@ -1,6 +1,6 @@
-package client.UI;
+package client.ui;
 
-import client.DOMAIN.GameManager;
+import client.domain.GameManager;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,6 +1,7 @@
-package server.DOMAIN;
+package server.data;
 
-import server.DATA.ChatHistory;
+import server.domain.ClientManager;
+import server.domain.Configurations;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -9,15 +10,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Server {
-    private final BannedPhrases bannedPhrases = new BannedPhrases();
+    private final Configurations configurations;
     private final ChatHistory chatHistory = new ChatHistory();
-    private final static int port = 9999;
+    private final int port;
+    private final String serverName;
     static Map<String, ClientManager> clients = new HashMap<>();
 
     public static void main(String[] args) {
         Server server = new Server();
+    }
+    Server(){
+        configurations = new Configurations();
+        port = configurations.giveServerPort();
+        serverName = configurations.giveServerName();
 
-        server.startServer();
+        startServer();
     }
 
     private void startServer() {
@@ -40,7 +47,7 @@ public class Server {
                 for (Map.Entry<String, ClientManager> client : clients.entrySet()) {
                     clientManager.sendMessage("System: download names: " + client.getKey());
                 }
-
+                clientManager.sendMessage("Server: Welcome to the server " + serverName + "!!!!");
                 clientManager.sendMessage("""
                         Server: Commands:
                          To ....: -> send message to group or person
@@ -51,7 +58,7 @@ public class Server {
                          TAB -> show list of players
                         
                         Server: Rules:
-                         do not use this phrases in chat! ->\s"""+ bannedPhrases.getAllBanPhrases()
+                         do not use this phrases in chat! ->\s"""+ configurations.getAllBanPhrases()
                         );
 
                 //  send all chat data to new user
@@ -110,8 +117,8 @@ public class Server {
         return chatHistory;
     }
 
-    public BannedPhrases getBannedPhrases() {
-        return bannedPhrases;
+    public Configurations getBannedPhrases() {
+        return configurations;
     }
 
     public void kickUser(String name) {
