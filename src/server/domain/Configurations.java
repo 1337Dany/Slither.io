@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class Configurations {
     private BufferedReader reader;
-    private static final String configPath = "src/server/resources/resources";
+    private static final String configPath = "src/server/resources/configs";
 
     public boolean containsBanPharases(String clientMessage) {
         String phrases;
