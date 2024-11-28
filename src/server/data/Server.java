@@ -19,7 +19,7 @@ public class Server {
     public static void main(String[] args) {
         Server server = new Server();
     }
-    Server(){
+    public Server(){
         configurations = new Configurations();
         port = configurations.giveServerPort();
         serverName = configurations.giveServerName();
@@ -40,28 +40,28 @@ public class Server {
                     clientManager.closeConnection();
                     continue;
                 }
-                clientManager.sendMessage("Server: connection established!");
+           //     clientManager.sendMessage("Server: connection established!");
 
-                sendMessageToEveryone("System: new game member: " + clientManager.getName());
+              //  sendMessageToEveryone("System: new game member: " + clientManager.getName());
 
-                for (Map.Entry<String, ClientManager> client : clients.entrySet()) {
-                    clientManager.sendMessage("System: download names: " + client.getKey());
-                }
-                clientManager.sendMessage("Server: Welcome to the server " + serverName + "!!!!");
-                clientManager.sendMessage("""
-                        Server: Commands:
-                         To ....: -> send message to group or person
-                         To not ....: -> send message to everyone except this group or person
-                         To all: ....: -> send message to everyone
-                        
-                         Keys:
-                         TAB -> show list of players
-                        
-                        Server: Rules:
-                         do not use this phrases in chat! ->\s"""+ configurations.getAllBanPhrases()
-                        );
+//                for (Map.Entry<String, ClientManager> client : clients.entrySet()) {
+//                    clientManager.sendMessage("System: download names: " + client.getKey());
+//                }
+//                clientManager.sendMessage("Server: Welcome to the server " + serverName + "!!!!");
+//                clientManager.sendMessage("""
+//                        Server: Commands:
+//                         To ....: -> send message to group or person
+//                         To not ....: -> send message to everyone except this group or person
+//                         To all: ....: -> send message to everyone
+//
+//                         Keys:
+//                         TAB -> show list of players
+//
+//                        Server: Rules:
+//                         do not use this phrases in chat! ->\s"""+ configurations.getAllBanPhrases()
+//                        );
 
-                //  send all chat data to new user
+                // send all chat data to new user
                 String tmp;
                 while ((tmp = chatHistory.getNextTextArea()) != null) {
                     clientManager.sendMessage(tmp);

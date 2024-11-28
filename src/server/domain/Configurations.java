@@ -33,41 +33,42 @@ public class Configurations {
 
     public String getAllBanPhrases() {
         String banPharasesList = "";
-        try {
-            reader = new BufferedReader(new FileReader(configPath));
-
-            String tmp = reader.readLine();
-            while (tmp != null) {
-                if (!tmp.startsWith("Server")) {
-                    banPharasesList += tmp;
-                }
-                tmp = reader.readLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            reader = new BufferedReader(new FileReader(configPath));
+//
+//            String tmp = reader.readLine();
+//            while (tmp != null) {
+//                if (!tmp.startsWith("Server")) {
+//                    banPharasesList += tmp;
+//                }
+//                tmp = reader.readLine();
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         return banPharasesList;
     }
     public String giveServerName(){
-        String name = "";
-        try {
-            reader = new BufferedReader(new FileReader(configPath));
-            reader.readLine();
-            name = reader.readLine().substring(13);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String name = "loh";
+//        try {
+//            reader = new BufferedReader(new FileReader(configPath));
+//            reader.readLine();
+//            name = reader.readLine().substring(13);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         return name;
     }
 
     public int giveServerPort(){
-        String port = "";
-        try {
-            reader = new BufferedReader(new FileReader(configPath));
-            port = reader.readLine().substring(13);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return Integer.parseInt(port);
+        return 12345;
+//        String port = "";
+//        try {
+//            reader = new BufferedReader(new FileReader(configPath));
+//            port = reader.readLine().substring(13);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return Integer.parseInt(port);
     }
 }

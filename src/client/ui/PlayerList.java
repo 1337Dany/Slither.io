@@ -1,6 +1,7 @@
 package client.ui;
 
 import client.domain.SettingsSetter;
+import client.ui.slither.SlitherPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,14 +11,14 @@ import java.util.ArrayList;
 
 public class PlayerList extends JPanel {
     private final SlitherPanel slitherPanel;
-    private final GameWindow gameWindow;
+    private final ClientGameView clientGameView;
     private static final Dimension playerListSize = new Dimension(300, 200);
     private boolean isVisible = false;
     private final ArrayList<JLabel> players = new ArrayList<>();
 
-    public PlayerList(SlitherPanel slitherPanel, GameWindow gameWindow) {
+    public PlayerList(SlitherPanel slitherPanel, ClientGameView clientGameView) {
         this.slitherPanel = slitherPanel;
-        this.gameWindow = gameWindow;
+        this.clientGameView = clientGameView;
         SettingsSetter.ignoreSettingParametersToObjects(this);
 
         setLayout(new FlowLayout(FlowLayout.LEFT, 10,10));
@@ -57,17 +58,17 @@ public class PlayerList extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 try {
-                    gameWindow.getActionDialog().setReceiver(player.getText());
+                    clientGameView.getActionDialog().setReceiver(player.getText());
                 } catch (StringIndexOutOfBoundsException exception) {
                     return;
                 }
                 Point mouseLocation = SwingUtilities.convertPoint((Component) e.getSource(), e.getPoint(), PlayerList.this);
 
-                gameWindow.getActionDialog().setLocation(
+                clientGameView.getActionDialog().setLocation(
                         mouseLocation.x + slitherPanel.getWidth() / 2 - playerListSize.width / 2,
                         mouseLocation.y
                 );
-                gameWindow.getActionDialog().setVisible(true);
+                clientGameView.getActionDialog().setVisible(true);
                 repaint();
             }
         });

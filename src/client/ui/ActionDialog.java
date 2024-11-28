@@ -1,6 +1,7 @@
 package client.ui;
 
 import client.domain.SettingsSetter;
+import client.ui.chat.ChatPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -62,7 +63,7 @@ public class ActionDialog extends JPanel {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                chatPanel.getUserInput().setText("To " + receiver + ": ");
+               // chatPanel.getUserInput().setText("To " + receiver + ": ");
                 setVisible(false);
                 repaint();
             }
@@ -82,13 +83,13 @@ public class ActionDialog extends JPanel {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                String message = chatPanel.getUserInput().getText();
-                if (message.startsWith("To all:") || !message.contains(":") || (message.length() < 5 && message.contains(":"))) {
-                    chatPanel.getUserInput().setText("To " + receiver + ": ");
-                } else {
-                    chatPanel.getUserInput().setText(message.substring(0, message.indexOf(':')) + "," + receiver +
-                            message.substring(message.indexOf(':')));
-                }
+//                String message = chatPanel.getUserInput().getText();
+//                if (message.startsWith("To all:") || !message.contains(":") || (message.length() < 5 && message.contains(":"))) {
+//                    chatPanel.getUserInput().setText("To " + receiver + ": ");
+//                } else {
+//                    chatPanel.getUserInput().setText(message.substring(0, message.indexOf(':')) + "," + receiver +
+//                            message.substring(message.indexOf(':')));
+//                }
                 setVisible(false);
                 repaint();
             }
@@ -108,7 +109,7 @@ public class ActionDialog extends JPanel {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                chatPanel.getUserInput().setText("To not " + receiver + ": ");
+            //    chatPanel.getUserInput().setText("To not " + receiver + ": ");
                 setVisible(false);
                 repaint();
             }
