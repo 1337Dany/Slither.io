@@ -61,7 +61,9 @@ public class Client implements Runnable {
             serverSocket.close();
             in.close();
             out.close();
-        }catch (IOException ignored){}
+        }catch (IOException e){
+            e.printStackTrace();
+        }
 
     }
     public void setUsername(String username) {
