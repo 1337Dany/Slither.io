@@ -54,7 +54,7 @@ public class GameManager {
                 } else if (message.contains("download names: ")) {
                     slitherPanel.addGamer(message.substring(24));
                 } else if (message.contains("kick: ")) {
-                    chatPanel.addMessage(message.substring(14) + "has left", Color.ORANGE);
+                    chatPanel.addMessage(message.substring(14) + " has left", Color.ORANGE);
                     slitherPanel.removePlayer(message.substring(14));
                 }
             } else if (message.startsWith("Server: ")) {
