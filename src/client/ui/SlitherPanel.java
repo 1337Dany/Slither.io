@@ -43,7 +43,6 @@ public class SlitherPanel extends JPanel {
         name.setFocusable(false);
 
         this.add(name);
-        gameWindow.add(this);
     }
     private void drawChat(){
         chat = new ChatPanel(gameManager, gameWindow);

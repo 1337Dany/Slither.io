@@ -20,22 +20,23 @@ public class GameManager {
 
         gameWindow.openMainJFrame();
 
+        slitherPanel = new SlitherPanel(gameWindow, this);
+
         settingsSetter.setParametersToObjects(gameWindow);
     }
 
     public void startGame() {
-        slitherPanel = new SlitherPanel(gameWindow, this);
-
-        settingsSetter.setParametersToObjects(gameWindow);
+        gameWindow.add(slitherPanel);
     }
 
     public void establishConnection(String username, String ip) {
         client.setUsername(username);
         client.setIp(ip);
 
-        startGame();
         if (client.connect()) {
             gameWindow.hideMenu();
+            startGame();
+            gameWindow.repaint();
         } else {
             gameWindow.wrongServer();
         }
