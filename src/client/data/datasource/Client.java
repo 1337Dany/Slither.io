@@ -24,7 +24,6 @@ public class Client implements Runnable {
 
     public void connect() {
         gameThread.start();
-        System.out.println("Connection established");
     }
 
     @Override
@@ -37,7 +36,7 @@ public class Client implements Runnable {
                 }
             }
         } catch (Exception exception) {
-            callback.onError(exception.getLocalizedMessage());
+            callback.onError(new ServerDisconnectedException());
         }
     }
 
@@ -48,7 +47,7 @@ public class Client implements Runnable {
             out.close();
             gameThread.interrupt();
         } catch (IOException exception) {
-            callback.onError(exception.getLocalizedMessage());
+            callback.onError(new ServerDisconnectedException());
         }
     }
 

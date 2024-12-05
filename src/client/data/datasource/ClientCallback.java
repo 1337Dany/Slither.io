@@ -1,6 +1,6 @@
 package client.data.datasource;
 
 public interface ClientCallback {
-    void onError(String error);
+    void onError(ClientException exception);
     void onMessageReceived(String message);
 }

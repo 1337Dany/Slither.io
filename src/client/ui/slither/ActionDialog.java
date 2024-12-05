@@ -1,28 +1,26 @@
-package client.ui;
+package client.ui.slither;
 
 import client.domain.SettingsSetter;
-import client.ui.chat.ChatPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class ActionDialog extends JPanel {
-    private ChatPanel chatPanel;
     private static final Dimension actionDialogSize = new Dimension(180, 75);
+    private final ActionDialogContract actionDialogContract;
     private String receiver;
     private final JLabel messageTo = new JLabel();
     private final JLabel addToGroupMessage = new JLabel();
     private final JLabel notMessageTo = new JLabel();
 
-    public ActionDialog() {
-        draw();
+    public ActionDialog(ActionDialogContract actionDialogContract) {
+        this.actionDialogContract = actionDialogContract;
+        configure();
     }
 
-    private void draw() {
+    private void configure() {
         setBackground(Color.BLACK);
         setSize(actionDialogSize);
         SettingsSetter.ignoreSettingParametersToObjects(this);
@@ -63,8 +61,8 @@ public class ActionDialog extends JPanel {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-               // chatPanel.getUserInput().setText("To " + receiver + ": ");
-                setVisible(false);
+                // chatPanel.getUserInput().setText("To " + receiver + ": ");
+                actionDialogContract.hideActionDialog();
                 repaint();
             }
         });
@@ -90,7 +88,7 @@ public class ActionDialog extends JPanel {
 //                    chatPanel.getUserInput().setText(message.substring(0, message.indexOf(':')) + "," + receiver +
 //                            message.substring(message.indexOf(':')));
 //                }
-                setVisible(false);
+                actionDialogContract.hideActionDialog();
                 repaint();
             }
         });
@@ -109,29 +107,17 @@ public class ActionDialog extends JPanel {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-            //    chatPanel.getUserInput().setText("To not " + receiver + ": ");
-                setVisible(false);
+                //    chatPanel.getUserInput().setText("To not " + receiver + ": ");
+                actionDialogContract.hideActionDialog();
                 repaint();
-            }
-        });
-
-        addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
-                    setVisible(false);
-                }
             }
         });
     }
 
-    public void setReceiver(String name) {
+    public void setSender(String name) {
         receiver = name;
         messageTo.setText("Chat to " + name);
         addToGroupMessage.setText("Add to group message " + name);
         notMessageTo.setText("Chat not to " + name);
-    }
-    public void setChatPanel(ChatPanel chatPanel){
-        this.chatPanel = chatPanel;
     }
 }

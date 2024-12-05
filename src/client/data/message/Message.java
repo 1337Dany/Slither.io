@@ -13,6 +13,9 @@ public abstract class Message {
 
     public String getReceiver() {
         return receiver;
+//    } catch (StringIndexOutOfBoundsException exception) {
+//        return;
+//    }
     }
 
     public void setReceiver(String receiver) {

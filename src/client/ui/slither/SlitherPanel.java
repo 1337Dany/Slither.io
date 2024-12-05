@@ -1,20 +1,24 @@
 package client.ui.slither;
 
 import client.data.message.Message;
-import client.ui.PlayerList;
+import client.domain.SettingsSetter;
 import client.ui.chat.ChatPanel;
 import client.ui.chat.IChatCallback;
 
 import javax.swing.*;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
-public class SlitherPanel extends JPanel implements IChatCallback {
+public class SlitherPanel extends JPanel implements IChatCallback, ActionDialogContract {
 
-    private ISlitherCallback callback;
+    private final ISlitherCallback callback;
     private static final int SPACE = 20;//separated space for name
     private final JTextArea name = new JTextArea();
     private final ChatPanel chat = new ChatPanel(this);
+    private final ActionDialog actionDialog = new ActionDialog(this);
 
     private static PlayerList playerList;
 
@@ -25,11 +29,11 @@ public class SlitherPanel extends JPanel implements IChatCallback {
         configure();
         configureName(frameSize);
         configureChat();
+        configuratePlayerList();
     }
 
     public void setUsername(String username) {
         name.setText(username);
-        name.repaint();
     }
 
     private void configureName(Dimension frameSize) {
@@ -48,28 +52,36 @@ public class SlitherPanel extends JPanel implements IChatCallback {
     private void configure() {
         this.setBackground(Color.DARK_GRAY);
         this.setLocation(0, 0);
+        SettingsSetter.ignoreSettingParametersToObjects(actionDialog);
+        chat.setActionDialogContract(this);
+        add(actionDialog);
     }
 
     private void configureChat() {
-        chat.setLocation(0,(this.getHeight() - chat.getHeight())/2);
+        chat.setLocation(0, (this.getHeight() - chat.getHeight()) / 2);
         this.add(chat);
     }
 
-    private void drawPlayerList() {
-//        playerList = new PlayerList(this, clientGameView);
-//
-//        InputMap inputMap = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-//        ActionMap actionMap = this.getActionMap();
-//
-//        inputMap.put(KeyStroke.getKeyStroke("TAB"), "handleTab");
-//        actionMap.put("handleTab", new AbstractAction() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                callPlayerList();
-//            }
-//        });
-//
-//        this.add(playerList);
+    private void configuratePlayerList() {
+        playerList = new PlayerList(this);
+        playerList.setLocation(this.getWidth() / 2 - playerList.getWidth()/2,
+                0
+        );
+
+        setFocusTraversalKeysEnabled(false);
+
+        InputMap inputMap = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = this.getActionMap();
+
+        inputMap.put(KeyStroke.getKeyStroke("TAB"), "handleTab");
+        actionMap.put("handleTab", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                playerList.callPlayerList();
+            }
+        });
+
+        this.add(playerList);
     }
 
     public void addGamer(String name) {
@@ -86,7 +98,7 @@ public class SlitherPanel extends JPanel implements IChatCallback {
         drawHexagons(graphics);
     }
 
-    private void drawHexagons(Graphics graphics){
+    private void drawHexagons(Graphics graphics) {
         Graphics2D g2 = (Graphics2D) graphics;
         g2.setColor(Color.LIGHT_GRAY);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -124,12 +136,28 @@ public class SlitherPanel extends JPanel implements IChatCallback {
         g2.drawPolygon(xPoints, yPoints, 6);
     }
 
-    public void onMessageReceived(Message message){
+    public void onMessageReceived(Message message) {
         chat.addMessage(message);
     }
 
     @Override
     public void sendMessage(Message message) {
         callback.sendMessage(message);
+    }
+
+    @Override
+    public void showActionDialog(int x, int y) {
+        actionDialog.setLocation(x,y);
+        actionDialog.setVisible(true);
+    }
+
+    @Override
+    public void hideActionDialog() {
+        actionDialog.setVisible(false);
+    }
+
+    @Override
+    public void setSender(String sender) {
+        actionDialog.setSender(sender);
     }
 }

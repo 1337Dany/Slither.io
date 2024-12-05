@@ -20,11 +20,9 @@ public class SettingsSetter {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        setParametersToObjects(window);
     }
 
-    public void setParametersToObjects(Component component) {
+    public static void setParametersToObjects(Component component) {
         if (!ignoredComponents.contains(component)) {
             if (!(component.getFont() == null)) {
                 component.setFont(font.deriveFont((float) component.getFont().getSize()));

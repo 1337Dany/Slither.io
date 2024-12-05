@@ -1,7 +1,6 @@
-package client.ui;
+package client.ui.slither;
 
 import client.domain.SettingsSetter;
-import client.ui.slither.SlitherPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,28 +9,22 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public class PlayerList extends JPanel {
-    private final SlitherPanel slitherPanel;
-    private final ClientGameView clientGameView;
     private static final Dimension playerListSize = new Dimension(300, 200);
+    private final ActionDialogContract actionDialogContract;
     private boolean isVisible = false;
     private final ArrayList<JLabel> players = new ArrayList<>();
 
-    public PlayerList(SlitherPanel slitherPanel, ClientGameView clientGameView) {
-        this.slitherPanel = slitherPanel;
-        this.clientGameView = clientGameView;
+    public PlayerList(ActionDialogContract actionDialogContract) {
+        this.actionDialogContract = actionDialogContract;
         SettingsSetter.ignoreSettingParametersToObjects(this);
-
-        setLayout(new FlowLayout(FlowLayout.LEFT, 10,10));
-        draw();
+        configurate();
     }
 
-    private void draw() {
+    private void configurate() {
         setBackground(new Color(0, 0, 0, 100));
+        setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
         setSize(playerListSize);
-        SettingsSetter.ignoreSettingParametersToObjects(this);
         setVisible(isVisible);
-        setLocation(slitherPanel.getWidth() / 2 - playerListSize.width / 2,
-                0);
     }
 
     public void addPlayer(String name) {
@@ -57,19 +50,19 @@ public class PlayerList extends JPanel {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                try {
-                    clientGameView.getActionDialog().setReceiver(player.getText());
-                } catch (StringIndexOutOfBoundsException exception) {
-                    return;
-                }
-                Point mouseLocation = SwingUtilities.convertPoint((Component) e.getSource(), e.getPoint(), PlayerList.this);
-
-                clientGameView.getActionDialog().setLocation(
-                        mouseLocation.x + slitherPanel.getWidth() / 2 - playerListSize.width / 2,
-                        mouseLocation.y
-                );
-                clientGameView.getActionDialog().setVisible(true);
-                repaint();
+//                try {
+//                    clientGameView.getActionDialog().setReceiver(player.getText());
+//                } catch (StringIndexOutOfBoundsException exception) {
+//                    return;
+//                }
+//                Point mouseLocation = SwingUtilities.convertPoint((Component) e.getSource(), e.getPoint(), PlayerList.this);
+//
+//                clientGameView.getActionDialog().setLocation(
+//                        mouseLocation.x + slitherPanel.getWidth() / 2 - playerListSize.width / 2,
+//                        mouseLocation.y
+//                );
+//                clientGameView.getActionDialog().setVisible(true);
+//                repaint();
             }
         });
 
@@ -98,6 +91,14 @@ public class PlayerList extends JPanel {
     public void hidePlayerList() {
         setVisible(false);
         isVisible = false;
+    }
+
+    public void callPlayerList() {
+        if (isVisible) {
+            hidePlayerList();
+        } else {
+            showPlayerList();
+        }
     }
 
     public boolean getIsVisible() {

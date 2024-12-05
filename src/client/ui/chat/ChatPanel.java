@@ -10,28 +10,32 @@ import java.awt.event.MouseEvent;
 
 import client.data.message.Message;
 import client.data.message.ToAllMessage;
+import client.domain.SettingsSetter;
+import client.ui.slither.ActionDialogContract;
 
 public class ChatPanel extends JPanel {
 
+    private static final int HEIGH_OF_CLICKABLE_MESSAGE = 30;
     private final IChatCallback iChatCallback;
+    private ActionDialogContract actionDialogContract;
     private JPanel messagePanel;
     private JScrollPane scrollPane;
     private JTextArea userInput;
 
     public ChatPanel(IChatCallback iChatCallback) {
-        this.setSize(new Dimension(300, 300));
-        this.setBackground(new Color(0, 0, 0, 125));
-        this.setLayout(new BorderLayout());
         this.iChatCallback = iChatCallback;
         configure();
         configureMessagePanel();
         configureScrollPanel();
         configureUserInput();
+
+        SettingsSetter.setParametersToObjects(this);
     }
 
     private void configure() {
-        setLayout(new BorderLayout());
-        setBackground(new Color(0, 0, 0, 125));
+        this.setSize(new Dimension(300, 300));
+        this.setBackground(new Color(0, 0, 0, 125));
+        this.setLayout(new BorderLayout());
     }
 
     private void configureMessagePanel() {
@@ -107,44 +111,44 @@ public class ChatPanel extends JPanel {
         messageArea.setLineWrap(true);
         messageArea.setBackground(new Color(0, 255, 255, 100));
         messageArea.setOpaque(false);
-        if(message instanceof ToAllMessage){
+        if (message instanceof ToAllMessage) {
             messageArea.setForeground(Color.WHITE);
         }
         messageArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         messageArea.setFont(new Font(messageArea.getFont().getFontName(), Font.PLAIN, 14));
 
         messagePanel.add(messageArea);
-        messagePanel.revalidate();
-        messagePanel.repaint();
+        messageArea.revalidate();
+        messageArea.repaint();
 
         messageArea.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
+                e.consume();
                 messageArea.setOpaque(true);
-                messageArea.repaint();
+                messagePanel.repaint();
+                revalidate();
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
+                e.consume();
                 messageArea.setOpaque(false);
-                messageArea.repaint();
+                messagePanel.repaint();
+                revalidate();
             }
 
             @Override
             public void mouseClicked(MouseEvent e) {
-//                try {
-//                    clientGameView.getActionDialog().setReceiver(message.substring(message.indexOf('(') + 1, message.indexOf(')')));
-//                } catch (StringIndexOutOfBoundsException exception) {
-//                    return;
-//                }
-//                Point mouseLocation = SwingUtilities.convertPoint((Component) e.getSource(), e.getPoint(), ChatPanel.this);
-//
-//                clientGameView.getActionDialog().setLocation(
-//                        mouseLocation.x,
-//                        (int) (mouseLocation.y + chatSize.getHeight() / 2)
-//                );
-//                clientGameView.getActionDialog().setVisible(true);
+                    actionDialogContract.setSender(message.getReceiver());
+                actionDialogContract.showActionDialog(e.getX(),
+                        e.getLocationOnScreen().y - HEIGH_OF_CLICKABLE_MESSAGE
+                );
             }
         });
+    }
+
+    public void setActionDialogContract(ActionDialogContract actionDialogContract) {
+        this.actionDialogContract = actionDialogContract;
     }
 }

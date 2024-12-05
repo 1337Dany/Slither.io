@@ -1,5 +1,7 @@
 package client.ui.menu;
 
+import client.domain.SettingsSetter;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -18,12 +20,12 @@ public class MenuView extends JPanel {
 
     private final IMenuCallback callback;
 
-    private final JLabel serverWrongIp = new JLabel();
-    private final JLabel serverWrongName = new JLabel();
+    private final JLabel serverWrongIp = new JLabel("Incorrect IP");
+    private final JLabel serverWrongName = new JLabel("Incorrect name");
     private final JButton playButton = new JButton("Play");
     private final JLabel logo = new JLabel("Slither.io");
     private final JLabel enterIP = new JLabel("Enter IP:");
-    private final JTextArea ip = new JTextArea("localhost");
+    private final JTextArea ip = new JTextArea("\\\\.....");
     private final JLabel enterName = new JLabel("Enter your name:");
     private final JTextArea name = new JTextArea("\\\\.....");
     private final JScrollPane scrollPane = new JScrollPane(name);
@@ -33,8 +35,8 @@ public class MenuView extends JPanel {
         configure(frameSize);
         configureLogo();
         configureEnteringIp();
-        configureIpEntering();
         configureIp();
+        configureWrongIp();
         configureEnterName();
         configureWrongName();
         configureName();
@@ -88,7 +90,7 @@ public class MenuView extends JPanel {
         );
     }
 
-    private void configureIpEntering(){
+    private void configureWrongIp(){
         serverWrongIp.setForeground(Color.RED);
         serverWrongIp.setFont(new Font(enterIP.getFont().getFontName(), Font.PLAIN, 30));
         serverWrongIp.setLocation(enterIP.getWidth(), enterIP.getY());
@@ -96,6 +98,8 @@ public class MenuView extends JPanel {
                 getWidth() - enterIP.getWidth(),
                 enterIP.getHeight()
         );
+        SettingsSetter.ignoreSettingParametersToObjects(serverWrongIp);
+        serverWrongIp.setVisible(false);
     }
 
     private void configureIp(){
@@ -135,7 +139,7 @@ public class MenuView extends JPanel {
         );
     }
 
-    public void configureWrongName(){
+    private void configureWrongName(){
         serverWrongName.setForeground(Color.RED);
         serverWrongName.setFont(new Font(enterIP.getFont().getFontName(), Font.PLAIN, 30));
         serverWrongName.setLocation(enterName.getWidth(), enterName.getY());
@@ -143,9 +147,11 @@ public class MenuView extends JPanel {
                 getWidth() - enterName.getWidth(),
                 enterName.getHeight()
         );
+        SettingsSetter.ignoreSettingParametersToObjects(serverWrongName);
+        serverWrongName.setVisible(false);
     }
 
-    public void configureName(){
+    private void configureName(){
         name.setAlignmentY(JTextArea.CENTER_ALIGNMENT);
         name.setForeground(Color.WHITE);
         name.setBackground(Color.DARK_GRAY);
@@ -163,7 +169,7 @@ public class MenuView extends JPanel {
         });
     }
 
-    public void configureScrollableName(){
+    private void configureScrollableName(){
         scrollPane.setBorder(null);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -176,7 +182,7 @@ public class MenuView extends JPanel {
         );
     }
 
-    public void configurePlay() {
+    private void configurePlay() {
         playButton.setFont(new Font(name.getFont().getFontName(), Font.PLAIN, 30));
         playButton.setBounds(
                 getWidth() / 2 - 200 / 2,
@@ -201,5 +207,12 @@ public class MenuView extends JPanel {
         add(serverWrongIp);
         add(enterIP);
         add(logo);
+    }
+
+    public void showIpErrorText(){
+        serverWrongIp.setVisible(true);
+    }
+    public void showNameErrorText(){
+        serverWrongName.setVisible(true);
     }
 }
