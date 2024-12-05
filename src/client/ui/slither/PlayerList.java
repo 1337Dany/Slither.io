@@ -93,14 +93,6 @@ public class PlayerList extends JPanel {
         isVisible = false;
     }
 
-    public void callPlayerList() {
-        if (isVisible) {
-            hidePlayerList();
-        } else {
-            showPlayerList();
-        }
-    }
-
     public boolean getIsVisible() {
         return isVisible;
     }

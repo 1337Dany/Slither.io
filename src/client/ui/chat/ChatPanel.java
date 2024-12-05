@@ -12,12 +12,14 @@ import client.data.message.Message;
 import client.data.message.ToAllMessage;
 import client.domain.SettingsSetter;
 import client.ui.slither.ActionDialogContract;
+import client.ui.slither.PlayerListContract;
 
 public class ChatPanel extends JPanel {
 
     private static final int HEIGH_OF_CLICKABLE_MESSAGE = 30;
     private final IChatCallback iChatCallback;
     private ActionDialogContract actionDialogContract;
+    private PlayerListContract playerListContract;
     private JPanel messagePanel;
     private JScrollPane scrollPane;
     private JTextArea userInput;
@@ -95,7 +97,7 @@ public class ChatPanel extends JPanel {
                     }
                 } else if (event.getKeyCode() == KeyEvent.VK_TAB) {
                     event.consume();
-                    // SlitherPanel.callPlayerList();
+                    playerListContract.callPlayerList();
                 }
             }
         });
@@ -150,5 +152,8 @@ public class ChatPanel extends JPanel {
 
     public void setActionDialogContract(ActionDialogContract actionDialogContract) {
         this.actionDialogContract = actionDialogContract;
+    }
+    public void setPlayerListContract(PlayerListContract playerListContract){
+        this.playerListContract = playerListContract;
     }
 }

@@ -9,10 +9,8 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
-public class SlitherPanel extends JPanel implements IChatCallback, ActionDialogContract {
+public class SlitherPanel extends JPanel implements IChatCallback, ActionDialogContract, PlayerListContract {
 
     private final ISlitherCallback callback;
     private static final int SPACE = 20;//separated space for name
@@ -20,7 +18,7 @@ public class SlitherPanel extends JPanel implements IChatCallback, ActionDialogC
     private final ChatPanel chat = new ChatPanel(this);
     private final ActionDialog actionDialog = new ActionDialog(this);
 
-    private static PlayerList playerList;
+    private final PlayerList playerList = new PlayerList(this);
 
     public SlitherPanel(Dimension frameSize, ISlitherCallback callback) {
         this.callback = callback;
@@ -59,11 +57,11 @@ public class SlitherPanel extends JPanel implements IChatCallback, ActionDialogC
 
     private void configureChat() {
         chat.setLocation(0, (this.getHeight() - chat.getHeight()) / 2);
+        chat.setPlayerListContract(this);
         this.add(chat);
     }
 
     private void configuratePlayerList() {
-        playerList = new PlayerList(this);
         playerList.setLocation(this.getWidth() / 2 - playerList.getWidth()/2,
                 0
         );
@@ -77,7 +75,7 @@ public class SlitherPanel extends JPanel implements IChatCallback, ActionDialogC
         actionMap.put("handleTab", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                playerList.callPlayerList();
+              callPlayerList();
             }
         });
 
@@ -159,5 +157,14 @@ public class SlitherPanel extends JPanel implements IChatCallback, ActionDialogC
     @Override
     public void setSender(String sender) {
         actionDialog.setSender(sender);
+    }
+
+    @Override
+    public void callPlayerList() {
+        if (playerList.getIsVisible()) {
+            playerList.hidePlayerList();
+        } else {
+            playerList.showPlayerList();
+        }
     }
 }
