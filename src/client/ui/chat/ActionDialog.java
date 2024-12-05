@@ -1,4 +1,4 @@
-package client.ui.slither;
+package client.ui.chat;
 
 import client.domain.SettingsSetter;
 

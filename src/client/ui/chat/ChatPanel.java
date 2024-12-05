@@ -11,7 +11,6 @@ import java.awt.event.MouseEvent;
 import client.data.message.Message;
 import client.data.message.ToAllMessage;
 import client.domain.SettingsSetter;
-import client.ui.slither.ActionDialogContract;
 import client.ui.slither.PlayerListContract;
 
 public class ChatPanel extends JPanel {
@@ -98,6 +97,8 @@ public class ChatPanel extends JPanel {
                 } else if (event.getKeyCode() == KeyEvent.VK_TAB) {
                     event.consume();
                     playerListContract.callPlayerList();
+                }else if(event.getKeyCode() == KeyEvent.VK_ESCAPE){
+                    actionDialogContract.hideActionDialog();
                 }
             }
         });

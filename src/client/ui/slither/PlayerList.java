@@ -1,6 +1,7 @@
 package client.ui.slither;
 
 import client.domain.SettingsSetter;
+import client.ui.chat.ActionDialogContract;
 
 import javax.swing.*;
 import java.awt.*;

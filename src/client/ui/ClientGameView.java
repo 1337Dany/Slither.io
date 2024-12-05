@@ -37,6 +37,7 @@ public class ClientGameView extends JFrame implements ViewContract, IMenuCallbac
         this.remove(menuPanel);
         this.add(slitherPanel);
         repaint();
+        revalidate();
     }
 
     @Override
@@ -44,6 +45,7 @@ public class ClientGameView extends JFrame implements ViewContract, IMenuCallbac
         this.add(menuPanel);
         this.remove(slitherPanel);
         repaint();
+        revalidate();
     }
 
     @Override
