@@ -1,38 +1,41 @@
 package client.data.datasource;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import shared.Message;
+import shared.MessagePrefixes;
+
+import java.io.*;
 import java.net.Socket;
 
 public class Client implements Runnable {
 
     private final Thread gameThread = new Thread(this);
-    private ClientCallback callback;
-
+    private final ClientCallback callback;
+    String name;
     private final Socket serverSocket;
-    private final BufferedReader in;
-    private final PrintWriter out;
+    private final ObjectInputStream in;
+    private final ObjectOutputStream out;
 
     public Client(int port, String serverIp, ClientCallback callback) throws IOException {
         serverSocket = new Socket(serverIp, port);
-        out = new PrintWriter(serverSocket.getOutputStream(), true);
-        in = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
+        out = new ObjectOutputStream(serverSocket.getOutputStream());
+        in = new ObjectInputStream(serverSocket.getInputStream());
         this.callback = callback;
     }
 
-    public void connect() {
+    public void connect(String name) {
+        this.name = name;
         gameThread.start();
     }
 
     @Override
     public void run() {
         try {
+            //Sending name first to check similarities
+            sendMessage( new Message(MessagePrefixes.TOALL,name,name));
             while (true) {
-                String clientMessage = in.readLine();
+                Object clientMessage = in.readObject();
                 if (callback != null) {
-                    callback.onMessageReceived(clientMessage);
+                    callback.onMessageReceived((Message) clientMessage);
                 }
             }
         } catch (Exception exception) {
@@ -51,7 +54,11 @@ public class Client implements Runnable {
         }
     }
 
-    public void sendMessage(String message) {
-        out.println(message);
+    public void sendMessage(Message message) {
+        try {
+            out.writeObject(message);
+        }catch (IOException exception){
+            System.out.println("Send message error");
+        }
     }
 }

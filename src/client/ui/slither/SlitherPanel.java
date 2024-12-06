@@ -1,11 +1,11 @@
 package client.ui.slither;
 
-import client.data.message.Message;
 import client.domain.SettingsSetter;
 import client.ui.chat.ActionDialog;
 import client.ui.chat.ActionDialogContract;
 import client.ui.chat.ChatPanel;
 import client.ui.chat.IChatCallback;
+import shared.Message;
 
 import javax.swing.*;
 

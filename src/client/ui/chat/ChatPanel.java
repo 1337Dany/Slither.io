@@ -8,10 +8,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import client.data.message.Message;
-import client.data.message.ToAllMessage;
+import client.domain.MessageUtils;
 import client.domain.SettingsSetter;
 import client.ui.slither.PlayerListContract;
+import shared.Message;
+import shared.MessagePrefixes;
 
 public class ChatPanel extends JPanel {
 
@@ -89,9 +90,9 @@ public class ChatPanel extends JPanel {
                                 String recevier = leftPanel.getText();
                                 Message message = MessageUtils().buildMessageFromReceiver(receiver, checkMessage)
                          */
-
-                        ToAllMessage message = new ToAllMessage(checkMessage);
-                        iChatCallback.sendMessage(message);
+//
+                        MessageUtils message = new MessageUtils();
+                        iChatCallback.sendMessage(message.buildMessage(userInput.getText()));
                         userInput.setText("");
                     }
                 } else if (event.getKeyCode() == KeyEvent.VK_TAB) {
@@ -106,16 +107,20 @@ public class ChatPanel extends JPanel {
     }
 
     public void addMessage(Message message) {
-        System.out.println(message);
-        JTextArea messageArea = new JTextArea(message.getMessage());
+        System.out.println(message.getMessage());
+        JTextArea messageArea = new JTextArea("(" + message.getSender() + "): " + message.getMessage());
         messageArea.setEditable(false);
         messageArea.setFocusable(false);
         messageArea.setWrapStyleWord(true);
         messageArea.setLineWrap(true);
         messageArea.setBackground(new Color(0, 255, 255, 100));
         messageArea.setOpaque(false);
-        if (message instanceof ToAllMessage) {
+        if (message.getPrefix() == MessagePrefixes.TOALL) {
             messageArea.setForeground(Color.WHITE);
+        }else if(message.getPrefix() == MessagePrefixes.WHISPER || message.getPrefix() == MessagePrefixes.EXCEPTWHISPER){
+            messageArea.setForeground(Color.GREEN);
+        }else{
+            messageArea.setForeground(Color.RED);
         }
         messageArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         messageArea.setFont(new Font(messageArea.getFont().getFontName(), Font.PLAIN, 14));

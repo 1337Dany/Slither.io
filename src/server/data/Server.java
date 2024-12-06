@@ -1,7 +1,8 @@
 package server.data;
 
-import server.domain.ClientManager;
 import server.domain.Configurations;
+import shared.Message;
+import shared.MessagePrefixes;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -19,7 +20,8 @@ public class Server {
     public static void main(String[] args) {
         Server server = new Server();
     }
-    public Server(){
+
+    public Server() {
         configurations = new Configurations();
         port = configurations.giveServerPort();
         serverName = configurations.giveServerName();
@@ -35,14 +37,14 @@ public class Server {
                 ClientManager clientManager = new ClientManager(this, clientSocket);
 
                 //  Check of existing player with the same name
-                if(clients.containsKey(clientManager.getName())) {
+                if (clients.containsKey(clientManager.getName())) {
                     clientManager.sendMessage("Server: player with this name is already exist");
                     clientManager.closeConnection();
                     continue;
                 }
-           //     clientManager.sendMessage("Server: connection established!");
+                //     clientManager.sendMessage("Server: connection established!");
 
-              //  sendMessageToEveryone("System: new game member: " + clientManager.getName());
+                //  sendMessageToEveryone("System: new game member: " + clientManager.getName());
 
 //                for (Map.Entry<String, ClientManager> client : clients.entrySet()) {
 //                    clientManager.sendMessage("System: download names: " + client.getKey());
@@ -78,9 +80,9 @@ public class Server {
         }
     }
 
-    public void sendMessageToEveryone(String message) {
+    public void sendMessageToEveryone(String message, String from) {
         for (Map.Entry<String, ClientManager> client : clients.entrySet()) {
-            client.getValue().sendMessage(message);
+            client.getValue().sendMessage(new Message(MessagePrefixes.TOALL, from, message));
         }
     }
 
@@ -91,7 +93,7 @@ public class Server {
                 clients.get(name).sendMessage("(" + from + ") -> : " + names[1]);
             }
             clients.get(from).sendMessage(" -> (" + names[0] + "): " + names[1]);
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             clients.get(from).sendMessage("Server: there is no user with this name");
         }
     }
@@ -126,6 +128,6 @@ public class Server {
         clients.remove(name);
         System.out.println(name + " removed");
 
-        sendMessageToEveryone("System: kick: " + name);
+        sendMessageToEveryone("System: kick: ", name);
     }
 }

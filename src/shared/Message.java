@@ -1,21 +1,28 @@
-package client.data.message;
+package shared;
 
-public abstract class Message {
+public class Message implements Packet {
+    private static final long serialVersionUID = 1L;
+    private MessagePrefixes prefix;
     private String receiver;
+    private String sender;
     private String message;
 
-    public Message(String receiver, String message) {
+    public Message(MessagePrefixes prefix, String receiver, String message) {
+        this.prefix = prefix;
         this.receiver = receiver;
         this.message = message;
     }
 
-    public abstract String buildMessage();
+    public MessagePrefixes getPrefix() {
+        return prefix;
+    }
 
     public String getReceiver() {
         return receiver;
-//    } catch (StringIndexOutOfBoundsException exception) {
-//        return;
-//    }
+    }
+
+    public String getSender() {
+        return sender;
     }
 
     public void setReceiver(String receiver) {

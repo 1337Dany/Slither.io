@@ -1,18 +1,15 @@
-package server.domain;
+package server.data;
 
-import server.data.Server;
+import shared.Message;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
 public class ClientManager implements Runnable {
     private final Server server;
     private final Socket socket;
-    private BufferedReader in = null;
-    private PrintWriter out = null;
+    private ObjectInputStream in = null;
+    private ObjectOutputStream out = null;
     private String myName;
     private final String myIp;
     private final int myPort;
@@ -26,11 +23,14 @@ public class ClientManager implements Runnable {
 
         //  Establish io streams
         try {
-            out = new PrintWriter(socket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
 
-            myName = in.readLine();
+            Object gettingName =  in.readObject();
+           // myName = gettingName.getMessage();
         } catch (IOException ignored) {
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -40,20 +40,24 @@ public class ClientManager implements Runnable {
             isRunning = true;
 
             while (isRunning) {
-                String clientMessage = in.readLine();
-                System.out.println(clientMessage);
-                actionPerform(clientMessage);
+                Object clientMessage = in.readObject();
+                if (clientMessage instanceof Message receivedMessage) {
+                    System.out.println(receivedMessage.getMessage());
+                    System.out.println(receivedMessage.getPrefix());
+                    System.out.println(receivedMessage.getSender());
+                    actionPerform((Message) clientMessage);
+                }
             }
 
-        } catch (IOException ignored) {
+        } catch (ClassNotFoundException | IOException e) {
             System.out.println("Client " + getFullAddress() + " disconected");
             server.kickUser(myName);
         }
     }
 
-    private void actionPerform(String message) {
+    private void actionPerform(Message message) {
         server.getChatHistory().addNote("To all: " + "(" + myName + "): " + message);
-        server.sendMessageToEveryone("To all: " + "(" + myName + "): " + message);
+        server.sendMessageToEveryone(message.getMessage(), myName);
 //        if (message.startsWith("admin s30050: ")) {
 //            server.sendMessageToEveryone("Admin message: " + message.substring(14));
 //            if (message.contains("kick: ")) {
@@ -78,8 +82,12 @@ public class ClientManager implements Runnable {
 //        }
     }
 
-    public void sendMessage(String message) {
-        out.println(message);
+    public void sendMessage(Object message) {
+        try {
+            out.writeObject(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void closeConnection() {

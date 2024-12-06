@@ -1,6 +1,6 @@
 package client.ui;
 
-import client.data.message.Message;
+import shared.Message;
 
 public interface ViewContract {
     void openGameWindow();

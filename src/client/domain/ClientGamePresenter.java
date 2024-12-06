@@ -1,15 +1,14 @@
 package client.domain;
 
 import client.data.datasource.*;
-import client.data.message.Message;
 import client.ui.ViewContract;
+import shared.Message;
 
 import java.io.IOException;
 
 public class ClientGamePresenter implements ClientCallback {
 
     private Client client;
-    private String username;
     private final ViewContract viewContract;
 
     public ClientGamePresenter(ViewContract viewContract) {
@@ -19,8 +18,7 @@ public class ClientGamePresenter implements ClientCallback {
     public void establishConnection(String username, String ip) {
         try {
             client = new Client(12345, ip, this);
-            this.username = username;
-            client.connect();
+            client.connect(username);
             viewContract.openGameWindow();
         } catch (IOException e) {
             this.onError(new IpException());
@@ -36,16 +34,16 @@ public class ClientGamePresenter implements ClientCallback {
         } else if (exception instanceof ServerDisconnectedException) {
             viewContract.openMenu();
         }
+        client.closeConnection();
     }
 
     @Override
-    public void onMessageReceived(String message) {
-        Message parsedMessage = new MessageUtils().parseMessageFromServer(message);
-        viewContract.messageReceived(parsedMessage);
+    public void onMessageReceived(Message message) {
+        //Message parsedMessage = new MessageUtils().parseMessageFromServer(message);
+        viewContract.messageReceived(message);
     }
 
     public void sendMessageToServer(Message message) {
-        String messageToSend = message.buildMessage();
-        client.sendMessage(messageToSend);
+        client.sendMessage(message);
     }
 }

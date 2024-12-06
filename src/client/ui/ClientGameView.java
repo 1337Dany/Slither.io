@@ -1,12 +1,12 @@
 package client.ui;
 
-import client.data.message.Message;
 import client.domain.ClientGamePresenter;
 import client.domain.SettingsSetter;
 import client.ui.menu.IMenuCallback;
 import client.ui.menu.MenuView;
 import client.ui.slither.ISlitherCallback;
 import client.ui.slither.SlitherPanel;
+import shared.Message;
 
 import javax.swing.*;
 

@@ -1,28 +1,27 @@
 package client.domain;
 
-import client.data.message.Message;
-import client.data.message.ToAllMessage;
+import shared.Message;
+import shared.MessagePrefixes;
 
 public class MessageUtils {
 
-    public Message buildMessageFromReceiver(String receiver, String message) {
-        if(receiver.equals("To all: ")){
-            return new ToAllMessage(message);
-        } else {
-            //other
-            return new ToAllMessage(message);
+    public Message buildMessage(String message) {
+        if (message.startsWith(MessagePrefixes.TOALL.getValue())) {
+            return new Message(MessagePrefixes.TOALL, message.substring(MessagePrefixes.TOALL.getValue().length(), message.indexOf(':')), message.substring(message.indexOf(':')));
         }
+//        else {
+//            //other
+//            //return new ToAllMessage();
+//        }
+        return null;
     }
 
-    public Message parseMessageFromServer(String message){
-        String[] split = message.split(":");
-        String receiver = split[0];
-        String messageText = split[1];
-        if(receiver.contains("To all")){
-            return new ToAllMessage(messageText);
-        } else {
-            //other
-            return new ToAllMessage(messageText);
-        }
-    }
+//    public Message parseMessageFromServer(Message message) {
+//        if (message.getPrefix() == MessagePrefixes.TOALL) {
+//            return new ToAllMessage(message);
+//        } else {
+//            //other
+//            return new ToAllMessage(message);
+//        }
+//    }
 }
