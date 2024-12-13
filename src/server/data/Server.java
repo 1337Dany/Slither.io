@@ -82,22 +82,16 @@ public class Server {
 
     public void sendMessageToEveryone(String message, String from) {
         for (Map.Entry<String, ClientManager> client : clients.entrySet()) {
-            client.getValue().sendMessage(new Message(MessagePrefixes.TOALL,null, from, message));
+            client.getValue().sendMessage(new Message(MessagePrefixes.TOALL, null, from, message));
         }
     }
 
     public void sendMessageTo(Message message) {
-        try {
-            String receiver = message.getReceiver();
-            String[] str = (message.getReceiver().split(","));
-            for (String name : str) {
-                clients.get(name).sendMessage(message);
-            }
-            clients.get(message.getSender()).sendMessage(message);
-        } catch (NullPointerException e) {
-            System.out.println("idi na hui");
-            //clients.get(from).sendMessage(new Message(MessagePrefixes.SERVER_CONFIGURATION, null, serverName,"Server: there is no user with this name" + message.getReceiver()));
+        String[] str = (message.getReceiver().split(","));
+        for (String name : str) {
+            clients.get(name).sendMessage(message);
         }
+        clients.get(message.getSender()).sendMessage(message);
     }
 
     public void sendMessageToEveryoneExceptOne(String message, String from) {
@@ -114,7 +108,7 @@ public class Server {
             }
         }
 
-       // clients.get(from).sendMessage(" -> not to (" + names[0] + "): " + names[1]);
+        // clients.get(from).sendMessage(" -> not to (" + names[0] + "): " + names[1]);
     }
 
     public ChatHistory getChatHistory() {

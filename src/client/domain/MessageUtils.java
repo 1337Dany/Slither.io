@@ -6,7 +6,7 @@ import shared.MessagePrefixes;
 public class MessageUtils {
 
     public Message buildMessage(String message) {
-        String messageContext = message.substring(message.indexOf(':') + 2);
+        String messageContext = message.substring(message.indexOf(':') + 1);
         if (message.startsWith(MessagePrefixes.TOALL.getValue())) {
             return new Message(
                     MessagePrefixes.TOALL,

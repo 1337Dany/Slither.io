@@ -173,7 +173,7 @@ public class SlitherPanel extends JPanel implements IChatCallback, ActionDialogC
 
     @Override
     public String getPrefixesFromInputPanel() {
-        return null;
+        return chat.getUserInput().getText();
     }
 
     @Override
