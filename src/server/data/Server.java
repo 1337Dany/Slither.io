@@ -38,7 +38,7 @@ public class Server {
 
                 //  Check of existing player with the same name
                 if (clients.containsKey(clientManager.getName())) {
-                    clientManager.sendMessage("Server: player with this name is already exist");
+                    clientManager.sendMessage(new Message(MessagePrefixes.SERVER_CONFIGURATION, null, serverName, "Server: player with this name is already exist"));
                     clientManager.closeConnection();
                     continue;
                 }
@@ -66,7 +66,7 @@ public class Server {
                 // send all chat data to new user
                 String tmp;
                 while ((tmp = chatHistory.getNextTextArea()) != null) {
-                    clientManager.sendMessage(tmp);
+                    clientManager.sendMessage(new Message(MessagePrefixes.SERVER_CONFIGURATION, null, serverName, tmp));
                 }
 
                 new Thread(clientManager).start();
@@ -82,19 +82,21 @@ public class Server {
 
     public void sendMessageToEveryone(String message, String from) {
         for (Map.Entry<String, ClientManager> client : clients.entrySet()) {
-            client.getValue().sendMessage(new Message(MessagePrefixes.TOALL, from, message));
+            client.getValue().sendMessage(new Message(MessagePrefixes.TOALL,null, from, message));
         }
     }
 
-    public void sendMessageTo(String message, String from) {
+    public void sendMessageTo(Message message) {
         try {
-            String[] names = message.split(":", 2);
-            for (String name : (names[0].split(","))) {
-                clients.get(name).sendMessage("(" + from + ") -> : " + names[1]);
+            String receiver = message.getReceiver();
+            String[] str = (message.getReceiver().split(","));
+            for (String name : str) {
+                clients.get(name).sendMessage(message);
             }
-            clients.get(from).sendMessage(" -> (" + names[0] + "): " + names[1]);
+            clients.get(message.getSender()).sendMessage(message);
         } catch (NullPointerException e) {
-            clients.get(from).sendMessage("Server: there is no user with this name");
+            System.out.println("idi na hui");
+            //clients.get(from).sendMessage(new Message(MessagePrefixes.SERVER_CONFIGURATION, null, serverName,"Server: there is no user with this name" + message.getReceiver()));
         }
     }
 
@@ -106,13 +108,13 @@ public class Server {
             for (String s : notToSendTo) {
                 if (!client.getKey().equals(s)) {
                     if (!client.getKey().equals(from)) {
-                        client.getValue().sendMessage("(" + from + ") -> : " + names[1]);
+                        //client.getValue().sendMessage("(" + from + ") -> : " + names[1]);
                     }
                 }
             }
         }
 
-        clients.get(from).sendMessage(" -> not to (" + names[0] + "): " + names[1]);
+       // clients.get(from).sendMessage(" -> not to (" + names[0] + "): " + names[1]);
     }
 
     public ChatHistory getChatHistory() {
@@ -128,6 +130,6 @@ public class Server {
         clients.remove(name);
         System.out.println(name + " removed");
 
-        sendMessageToEveryone("System: kick: ", name);
+        sendMessageToEveryone("Player " + name + " logged out", serverName);
     }
 }

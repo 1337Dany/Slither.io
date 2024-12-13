@@ -1,6 +1,7 @@
 package client.ui.chat;
 
 import client.domain.SettingsSetter;
+import shared.MessagePrefixes;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,7 +62,7 @@ public class ActionDialog extends JPanel {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                // chatPanel.getUserInput().setText("To " + receiver + ": ");
+                actionDialogContract.setPrefixesToInputPanel(MessagePrefixes.WHISPER.getValue() + " " + receiver + ": ");
                 actionDialogContract.hideActionDialog();
                 repaint();
             }

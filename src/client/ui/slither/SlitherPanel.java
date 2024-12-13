@@ -64,7 +64,7 @@ public class SlitherPanel extends JPanel implements IChatCallback, ActionDialogC
     }
 
     private void configuratePlayerList() {
-        playerList.setLocation(this.getWidth() / 2 - playerList.getWidth()/2,
+        playerList.setLocation(this.getWidth() / 2 - playerList.getWidth() / 2,
                 0
         );
 
@@ -77,7 +77,7 @@ public class SlitherPanel extends JPanel implements IChatCallback, ActionDialogC
         actionMap.put("handleTab", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-              callPlayerList();
+                callPlayerList();
             }
         });
 
@@ -146,8 +146,13 @@ public class SlitherPanel extends JPanel implements IChatCallback, ActionDialogC
     }
 
     @Override
+    public JTextArea getInputPanel() {
+        return chat.getUserInput();
+    }
+
+    @Override
     public void showActionDialog(int x, int y) {
-        actionDialog.setLocation(x,y);
+        actionDialog.setLocation(x, y);
         actionDialog.setVisible(true);
     }
 
@@ -159,6 +164,16 @@ public class SlitherPanel extends JPanel implements IChatCallback, ActionDialogC
     @Override
     public void setSender(String sender) {
         actionDialog.setSender(sender);
+    }
+
+    @Override
+    public void setPrefixesToInputPanel(String prefixes) {
+        getInputPanel().setText(prefixes + getInputPanel().getText().substring(getInputPanel().getText().indexOf(':') + 1));
+    }
+
+    @Override
+    public String getPrefixesFromInputPanel() {
+        return null;
     }
 
     @Override

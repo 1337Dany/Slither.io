@@ -1,5 +1,10 @@
 package shared;
 
+/**
+ * Class for packaging chat message that sends to the server.
+ * Contains prefix, receiver, sender and message
+ **/
+
 public class Message implements Packet {
     private static final long serialVersionUID = 1L;
     private MessagePrefixes prefix;
@@ -7,9 +12,10 @@ public class Message implements Packet {
     private String sender;
     private String message;
 
-    public Message(MessagePrefixes prefix, String receiver, String message) {
+    public Message(MessagePrefixes prefix, String receiver, String sender, String message) {
         this.prefix = prefix;
         this.receiver = receiver;
+        this.sender = sender;
         this.message = message;
     }
 
@@ -27,6 +33,10 @@ public class Message implements Packet {
 
     public void setReceiver(String receiver) {
         this.receiver = receiver;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 
     public String getMessage() {

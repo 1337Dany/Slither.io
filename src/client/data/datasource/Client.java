@@ -31,7 +31,7 @@ public class Client implements Runnable {
     public void run() {
         try {
             //Sending name first to check similarities
-            sendMessage( new Message(MessagePrefixes.TOALL,name,name));
+            sendMessage( new Message(MessagePrefixes.SERVER_CONFIGURATION, null,null, name));
             while (true) {
                 Object clientMessage = in.readObject();
                 if (callback != null) {

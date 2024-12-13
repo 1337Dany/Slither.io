@@ -5,7 +5,8 @@ import java.io.Serializable;
 public enum MessagePrefixes implements Serializable {
     TOALL("To all"),
     WHISPER("To"),
-    EXCEPTWHISPER("To not");
+    EXCEPTWHISPER("To not"),
+    SERVER_CONFIGURATION("Server");
     private static final long serialVersionUID = 1L;
     private final String value;
 

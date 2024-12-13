@@ -22,6 +22,7 @@ public class ChatPanel extends JPanel {
     private PlayerListContract playerListContract;
     private JPanel messagePanel;
     private JScrollPane scrollPane;
+
     private JTextArea userInput;
 
     public ChatPanel(IChatCallback iChatCallback) {
@@ -68,12 +69,12 @@ public class ChatPanel extends JPanel {
         userInput.setWrapStyleWord(true);
         userInput.setLineWrap(true);
         userInput.setOpaque(false);
-        userInput.setForeground(Color.LIGHT_GRAY);
+        userInput.setForeground(Color.WHITE);
         userInput.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (userInput.getText().equals("Tap to write a message...")) {
-                    userInput.setForeground(Color.WHITE);
+                    userInput.setText("");
                 }
             }
         });
@@ -82,23 +83,16 @@ public class ChatPanel extends JPanel {
             public void keyPressed(KeyEvent event) {
                 if (event.getKeyCode() == KeyEvent.VK_ENTER) {
                     event.consume();
-                    String checkMessage = userInput.getText();
-                    if (!checkMessage.isEmpty()) {
+                    MessageUtils message = new MessageUtils();
+                    if(userInput.getText().isEmpty()) return;
+                    iChatCallback.sendMessage(message.buildMessage(userInput.getText()));
+                    userInput.setText("");
 
-                        //read left part to define message type
-                        /*
-                                String recevier = leftPanel.getText();
-                                Message message = MessageUtils().buildMessageFromReceiver(receiver, checkMessage)
-                         */
-//
-                        MessageUtils message = new MessageUtils();
-                        iChatCallback.sendMessage(message.buildMessage(userInput.getText()));
-                        userInput.setText("");
-                    }
                 } else if (event.getKeyCode() == KeyEvent.VK_TAB) {
                     event.consume();
                     playerListContract.callPlayerList();
-                }else if(event.getKeyCode() == KeyEvent.VK_ESCAPE){
+                } else if (event.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    event.consume();
                     actionDialogContract.hideActionDialog();
                 }
             }
@@ -108,7 +102,8 @@ public class ChatPanel extends JPanel {
 
     public void addMessage(Message message) {
         System.out.println(message.getMessage());
-        JTextArea messageArea = new JTextArea("(" + message.getSender() + "): " + message.getMessage());
+        System.out.println(message.getSender());
+        JTextArea messageArea = new JTextArea();
         messageArea.setEditable(false);
         messageArea.setFocusable(false);
         messageArea.setWrapStyleWord(true);
@@ -117,10 +112,13 @@ public class ChatPanel extends JPanel {
         messageArea.setOpaque(false);
         if (message.getPrefix() == MessagePrefixes.TOALL) {
             messageArea.setForeground(Color.WHITE);
-        }else if(message.getPrefix() == MessagePrefixes.WHISPER || message.getPrefix() == MessagePrefixes.EXCEPTWHISPER){
+            messageArea.setText("(" + message.getSender() + "): " + message.getMessage());
+        } else if (message.getPrefix() == MessagePrefixes.WHISPER || message.getPrefix() == MessagePrefixes.EXCEPTWHISPER) {
+            messageArea.setText("-> (" + message.getSender() + ") " + message.getMessage());
             messageArea.setForeground(Color.GREEN);
-        }else{
+        } else if(message.getPrefix() == MessagePrefixes.SERVER_CONFIGURATION){
             messageArea.setForeground(Color.RED);
+            messageArea.setText(message.getSender() + ": " + message.getSender() + message.getMessage());
         }
         messageArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         messageArea.setFont(new Font(messageArea.getFont().getFontName(), Font.PLAIN, 14));
@@ -148,7 +146,7 @@ public class ChatPanel extends JPanel {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                    actionDialogContract.setSender(message.getReceiver());
+                actionDialogContract.setSender(message.getSender());
                 actionDialogContract.showActionDialog(e.getX(),
                         e.getLocationOnScreen().y - HEIGH_OF_CLICKABLE_MESSAGE
                 );
@@ -159,7 +157,12 @@ public class ChatPanel extends JPanel {
     public void setActionDialogContract(ActionDialogContract actionDialogContract) {
         this.actionDialogContract = actionDialogContract;
     }
-    public void setPlayerListContract(PlayerListContract playerListContract){
+
+    public void setPlayerListContract(PlayerListContract playerListContract) {
         this.playerListContract = playerListContract;
+    }
+
+    public JTextArea getUserInput() {
+        return userInput;
     }
 }

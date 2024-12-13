@@ -1,6 +1,7 @@
 package server.data;
 
 import shared.Message;
+import shared.MessagePrefixes;
 
 import java.io.*;
 import java.net.Socket;
@@ -25,12 +26,10 @@ public class ClientManager implements Runnable {
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
+            Message nameMessage = (Message) in.readObject();
+                myName = nameMessage.getMessage();
 
-            Object gettingName =  in.readObject();
-           // myName = gettingName.getMessage();
-        } catch (IOException ignored) {
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+        } catch (IOException | ClassNotFoundException ignored) {
         }
     }
 
@@ -42,10 +41,7 @@ public class ClientManager implements Runnable {
             while (isRunning) {
                 Object clientMessage = in.readObject();
                 if (clientMessage instanceof Message receivedMessage) {
-                    System.out.println(receivedMessage.getMessage());
-                    System.out.println(receivedMessage.getPrefix());
-                    System.out.println(receivedMessage.getSender());
-                    actionPerform((Message) clientMessage);
+                    actionPerform(receivedMessage);
                 }
             }
 
@@ -56,8 +52,13 @@ public class ClientManager implements Runnable {
     }
 
     private void actionPerform(Message message) {
-        server.getChatHistory().addNote("To all: " + "(" + myName + "): " + message);
-        server.sendMessageToEveryone(message.getMessage(), myName);
+        if(message.getPrefix() == MessagePrefixes.TOALL){
+            server.getChatHistory().addNote("To all: " + "(" + myName + "): " + message);
+            server.sendMessageToEveryone(message.getMessage(), myName);
+        }else if(message.getPrefix() == MessagePrefixes.WHISPER){
+            message.setSender(myName);
+            server.sendMessageTo(message);
+        }
 //        if (message.startsWith("admin s30050: ")) {
 //            server.sendMessageToEveryone("Admin message: " + message.substring(14));
 //            if (message.contains("kick: ")) {
@@ -82,7 +83,7 @@ public class ClientManager implements Runnable {
 //        }
     }
 
-    public void sendMessage(Object message) {
+    public void sendMessage(Message message) {
         try {
             out.writeObject(message);
         } catch (IOException e) {
@@ -92,9 +93,9 @@ public class ClientManager implements Runnable {
 
     public void closeConnection() {
         try {
-            socket.close();
             in.close();
             out.close();
+            socket.close();
             isRunning = false;
         } catch (IOException ignored) {
         }
