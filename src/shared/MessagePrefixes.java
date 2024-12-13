@@ -6,7 +6,7 @@ public enum MessagePrefixes implements Serializable {
     TOALL("To all"),
     WHISPER("To"),
     EXCEPTWHISPER("To not"),
-    SERVER_CONFIGURATION("Server");
+    CHAT_CONFIGURATION("Server");
     private static final long serialVersionUID = 1L;
     private final String value;
 

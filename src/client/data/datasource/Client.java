@@ -1,7 +1,9 @@
 package client.data.datasource;
 
+import shared.GameConfiguration;
 import shared.Message;
 import shared.MessagePrefixes;
+import shared.Packet;
 
 import java.io.*;
 import java.net.Socket;
@@ -31,11 +33,15 @@ public class Client implements Runnable {
     public void run() {
         try {
             //Sending name first to check similarities
-            sendMessage( new Message(MessagePrefixes.SERVER_CONFIGURATION, null,null, name));
+            sendMessage(new Message(MessagePrefixes.CHAT_CONFIGURATION, null, null, name));
             while (true) {
-                Object clientMessage = in.readObject();
+                Packet clientMessage = (Packet) in.readObject();
                 if (callback != null) {
-                    callback.onMessageReceived((Message) clientMessage);
+                    if (clientMessage instanceof Message) {
+                        callback.onMessageReceived((Message) clientMessage);
+                    } else if (clientMessage instanceof GameConfiguration) {
+                        callback.gameConfigurationReceived((GameConfiguration) clientMessage);
+                    }
                 }
             }
         } catch (Exception exception) {
@@ -57,7 +63,7 @@ public class Client implements Runnable {
     public void sendMessage(Message message) {
         try {
             out.writeObject(message);
-        }catch (IOException exception){
+        } catch (IOException exception) {
             System.out.println("Send message error");
         }
     }

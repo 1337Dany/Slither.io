@@ -2,6 +2,7 @@ package server.data;
 
 import shared.Message;
 import shared.MessagePrefixes;
+import shared.Packet;
 
 import java.io.*;
 import java.net.Socket;
@@ -53,11 +54,15 @@ public class ClientManager implements Runnable {
 
     private void actionPerform(Message message) {
         if(message.getPrefix() == MessagePrefixes.TOALL){
-            server.getChatHistory().addNote("To all: " + "(" + myName + "): " + message);
-            server.sendMessageToEveryone(message.getMessage(), myName);
+            server.getChatHistory().addNote(message.getMessage());
+            message.setSender(myName);
+            server.sendMessageToEveryone(message);
         }else if(message.getPrefix() == MessagePrefixes.WHISPER){
             message.setSender(myName);
             server.sendMessageTo(message);
+        }else if(message.getPrefix() == MessagePrefixes.EXCEPTWHISPER){
+            message.setSender(myName);
+            server.sendMessageToEveryoneExceptOne(message);
         }
 //        if (message.startsWith("admin s30050: ")) {
 //            server.sendMessageToEveryone("Admin message: " + message.substring(14));
@@ -83,7 +88,7 @@ public class ClientManager implements Runnable {
 //        }
     }
 
-    public void sendMessage(Message message) {
+    public void sendMessage(Packet message) {
         try {
             out.writeObject(message);
         } catch (IOException e) {
@@ -97,7 +102,8 @@ public class ClientManager implements Runnable {
             out.close();
             socket.close();
             isRunning = false;
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

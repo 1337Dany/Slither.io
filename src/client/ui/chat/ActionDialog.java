@@ -64,7 +64,7 @@ public class ActionDialog extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 actionDialogContract.setPrefixesToInputPanel(
                         MessagePrefixes.WHISPER.getValue() + " " + receiver + ":" +
-                        actionDialogContract.getPrefixesFromInputPanel().substring(actionDialogContract.getPrefixesFromInputPanel().indexOf(':')+1));
+                                actionDialogContract.getPrefixesFromInputPanel().substring(actionDialogContract.getPrefixesFromInputPanel().indexOf(':') + 1));
                 actionDialogContract.hideActionDialog();
                 repaint();
             }
@@ -91,7 +91,7 @@ public class ActionDialog extends JPanel {
                 } else {
                     actionDialogContract.setPrefixesToInputPanel(
                             message.substring(0, message.indexOf(':')) + "," + receiver +
-                            message.substring(message.indexOf(':')));
+                                    message.substring(message.indexOf(':')));
                 }
                 actionDialogContract.hideActionDialog();
                 repaint();
@@ -112,7 +112,7 @@ public class ActionDialog extends JPanel {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                //    chatPanel.getUserInput().setText("To not " + receiver + ": ");
+                actionDialogContract.setPrefixesToInputPanel("To not " + receiver + ": ");
                 actionDialogContract.hideActionDialog();
                 repaint();
             }

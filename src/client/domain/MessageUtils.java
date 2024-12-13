@@ -14,19 +14,19 @@ public class MessageUtils {
                     null,
                     messageContext
             );
+        } else if (message.startsWith(MessagePrefixes.EXCEPTWHISPER.getValue())) {
+            return new Message(
+                    MessagePrefixes.EXCEPTWHISPER,
+                    message.substring(MessagePrefixes.EXCEPTWHISPER.getValue().length() + 1, message.indexOf(':')),
+                    message.substring(MessagePrefixes.EXCEPTWHISPER.getValue().length(), message.indexOf(':')),
+                    messageContext
+            );
         } else if (message.startsWith(MessagePrefixes.WHISPER.getValue())) {
             String receivers = message.substring(MessagePrefixes.WHISPER.getValue().length() + 1, message.indexOf(':'));
             return new Message(
                     MessagePrefixes.WHISPER,
                     receivers,
                     message.substring(MessagePrefixes.WHISPER.getValue().length(), message.indexOf(':')),
-                    messageContext
-            );
-        } else if (message.startsWith(MessagePrefixes.EXCEPTWHISPER.getValue())) {
-            return new Message(
-                    MessagePrefixes.EXCEPTWHISPER,
-                    null,
-                    message.substring(MessagePrefixes.EXCEPTWHISPER.getValue().length(), message.indexOf(':')),
                     messageContext
             );
         } else {

@@ -1,8 +1,10 @@
 package server.data;
 
 import server.domain.Configurations;
+import shared.GameConfiguration;
 import shared.Message;
 import shared.MessagePrefixes;
+import shared.Packet;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -38,35 +40,38 @@ public class Server {
 
                 //  Check of existing player with the same name
                 if (clients.containsKey(clientManager.getName())) {
-                    clientManager.sendMessage(new Message(MessagePrefixes.SERVER_CONFIGURATION, null, serverName, "Server: player with this name is already exist"));
+                    clientManager.sendMessage(new Message(MessagePrefixes.CHAT_CONFIGURATION, null, serverName, "Server: player with this name is already exist"));
                     clientManager.closeConnection();
                     continue;
                 }
-                //     clientManager.sendMessage("Server: connection established!");
 
-                //  sendMessageToEveryone("System: new game member: " + clientManager.getName());
+                sendMessageToEveryone(new Message(MessagePrefixes.CHAT_CONFIGURATION, null, serverName, "Player " + clientManager.getName() + " logged in"));
+                sendMessageToEveryone(new GameConfiguration(clientManager.getName()));
 
-//                for (Map.Entry<String, ClientManager> client : clients.entrySet()) {
-//                    clientManager.sendMessage("System: download names: " + client.getKey());
-//                }
-//                clientManager.sendMessage("Server: Welcome to the server " + serverName + "!!!!");
-//                clientManager.sendMessage("""
-//                        Server: Commands:
-//                         To ....: -> send message to group or person
-//                         To not ....: -> send message to everyone except this group or person
-//                         To all: ....: -> send message to everyone
-//
-//                         Keys:
-//                         TAB -> show list of players
-//
-//                        Server: Rules:
-//                         do not use this phrases in chat! ->\s"""+ configurations.getAllBanPhrases()
-//                        );
+                for (Map.Entry<String, ClientManager> client : clients.entrySet()) {
+                    clientManager.sendMessage(new GameConfiguration(client.getKey()));
+                }
+
+                clientManager.sendMessage(new Message(MessagePrefixes.CHAT_CONFIGURATION, null, serverName, "Server: Welcome to the server " + serverName + "!!!!"));
+                clientManager.sendMessage(
+                        new Message(
+                                MessagePrefixes.CHAT_CONFIGURATION,
+                                null,
+                                serverName,
+                                "Server: Commands:\n" +
+                                        "To ....: -> send message to group or person\n" +
+                                        "To not ....: -> send message to everyone except this group or person\n" +
+                                        "To all: ....: -> send message to everyone\n" +
+                                        "Keys:\n" +
+                                        "TAB -> show list of players\n" +
+                                        "Server: Rules:\n" +
+                                        "do not use this phrases in chat! -> " + configurations.getAllBanPhrases()
+                        ));
 
                 // send all chat data to new user
                 String tmp;
                 while ((tmp = chatHistory.getNextTextArea()) != null) {
-                    clientManager.sendMessage(new Message(MessagePrefixes.SERVER_CONFIGURATION, null, serverName, tmp));
+                    clientManager.sendMessage(new Message(MessagePrefixes.CHAT_CONFIGURATION, null, serverName, tmp));
                 }
 
                 new Thread(clientManager).start();
@@ -80,9 +85,9 @@ public class Server {
         }
     }
 
-    public void sendMessageToEveryone(String message, String from) {
+    public void sendMessageToEveryone(Packet message) {
         for (Map.Entry<String, ClientManager> client : clients.entrySet()) {
-            client.getValue().sendMessage(new Message(MessagePrefixes.TOALL, null, from, message));
+            client.getValue().sendMessage(message);
         }
     }
 
@@ -94,21 +99,21 @@ public class Server {
         clients.get(message.getSender()).sendMessage(message);
     }
 
-    public void sendMessageToEveryoneExceptOne(String message, String from) {
-        String[] names = message.split(":", 2);
-        String[] notToSendTo = names[0].split(",");
+    public void sendMessageToEveryoneExceptOne(Message message) {
+        String[] notToSendTo = (message.getReceiver().split(","));
+        boolean isSent = true;
 
         for (Map.Entry<String, ClientManager> client : clients.entrySet()) {
-            for (String s : notToSendTo) {
-                if (!client.getKey().equals(s)) {
-                    if (!client.getKey().equals(from)) {
-                        //client.getValue().sendMessage("(" + from + ") -> : " + names[1]);
-                    }
+            for (int i = 0; i < notToSendTo.length; i++) {
+                if (client.getKey().equals(notToSendTo[i])) {
+                    isSent = false;
                 }
             }
+            if (isSent) {
+                client.getValue().sendMessage(message);
+            }
+            isSent = true;
         }
-
-        // clients.get(from).sendMessage(" -> not to (" + names[0] + "): " + names[1]);
     }
 
     public ChatHistory getChatHistory() {
@@ -124,6 +129,12 @@ public class Server {
         clients.remove(name);
         System.out.println(name + " removed");
 
-        sendMessageToEveryone("Player " + name + " logged out", serverName);
+        sendMessageToEveryone(
+                new Message(
+                        MessagePrefixes.CHAT_CONFIGURATION,
+                        null,
+                        serverName,
+                        "Player " + name + " logged out"
+                ));
     }
 }

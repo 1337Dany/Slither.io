@@ -5,6 +5,7 @@ import client.ui.chat.ActionDialog;
 import client.ui.chat.ActionDialogContract;
 import client.ui.chat.ChatPanel;
 import client.ui.chat.IChatCallback;
+import shared.GameConfiguration;
 import shared.Message;
 
 import javax.swing.*;
@@ -83,11 +84,6 @@ public class SlitherPanel extends JPanel implements IChatCallback, ActionDialogC
 
         this.add(playerList);
     }
-
-    public void addGamer(String name) {
-        playerList.addPlayer(name);
-    }
-
     public void removePlayer(String name) {
         playerList.removePlayer(name);
     }
@@ -136,6 +132,9 @@ public class SlitherPanel extends JPanel implements IChatCallback, ActionDialogC
         g2.drawPolygon(xPoints, yPoints, 6);
     }
 
+    public void gameConfigurationsReceived(GameConfiguration gameConfiguration){
+        playerList.addPlayer(gameConfiguration.getTabTags());
+    }
     public void onMessageReceived(Message message) {
         chat.addMessage(message);
     }
@@ -183,5 +182,10 @@ public class SlitherPanel extends JPanel implements IChatCallback, ActionDialogC
         } else {
             playerList.showPlayerList();
         }
+    }
+
+    @Override
+    public void setPlayerToList(String playerToList) {
+
     }
 }

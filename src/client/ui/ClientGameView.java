@@ -6,7 +6,9 @@ import client.ui.menu.IMenuCallback;
 import client.ui.menu.MenuView;
 import client.ui.slither.ISlitherCallback;
 import client.ui.slither.SlitherPanel;
+import shared.GameConfiguration;
 import shared.Message;
+import shared.Packet;
 
 import javax.swing.*;
 
@@ -51,6 +53,11 @@ public class ClientGameView extends JFrame implements ViewContract, IMenuCallbac
     @Override
     public void messageReceived(Message message) {
         slitherPanel.onMessageReceived(message);
+    }
+
+    @Override
+    public void gameConfigurationReceived(GameConfiguration packet) {
+        slitherPanel.gameConfigurationsReceived(packet);
     }
 
     @Override

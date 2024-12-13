@@ -2,7 +2,9 @@ package client.domain;
 
 import client.data.datasource.*;
 import client.ui.ViewContract;
+import shared.GameConfiguration;
 import shared.Message;
+import shared.Packet;
 
 import java.io.IOException;
 
@@ -41,6 +43,11 @@ public class ClientGamePresenter implements ClientCallback {
     public void onMessageReceived(Message message) {
         //Message parsedMessage = new MessageUtils().parseMessageFromServer(message);
         viewContract.messageReceived(message);
+    }
+
+    @Override
+    public void gameConfigurationReceived(GameConfiguration gameConfiguration) {
+        viewContract.gameConfigurationReceived(gameConfiguration);
     }
 
     public void sendMessageToServer(Message message) {
