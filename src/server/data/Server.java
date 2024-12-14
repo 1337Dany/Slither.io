@@ -46,10 +46,10 @@ public class Server {
                 }
 
                 sendMessageToEveryone(new Message(MessagePrefixes.CHAT_CONFIGURATION, null, serverName, "Player " + clientManager.getName() + " logged in"));
-                sendMessageToEveryone(new GameConfiguration(clientManager.getName()));
+                sendMessageToEveryone(new GameConfiguration(MessagePrefixes.TAB_CONFIGURATION, clientManager.getName()));
 
                 for (Map.Entry<String, ClientManager> client : clients.entrySet()) {
-                    clientManager.sendMessage(new GameConfiguration(client.getKey()));
+                    clientManager.sendMessage(new GameConfiguration(MessagePrefixes.TAB_CONFIGURATION,client.getKey()));
                 }
 
                 clientManager.sendMessage(new Message(MessagePrefixes.CHAT_CONFIGURATION, null, serverName, "Server: Welcome to the server " + serverName + "!!!!"));
@@ -129,6 +129,7 @@ public class Server {
         clients.remove(name);
         System.out.println(name + " removed");
 
+        sendMessageToEveryone(new GameConfiguration(MessagePrefixes.KICK, name));
         sendMessageToEveryone(
                 new Message(
                         MessagePrefixes.CHAT_CONFIGURATION,

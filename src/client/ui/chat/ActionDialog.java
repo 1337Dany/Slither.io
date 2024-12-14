@@ -9,6 +9,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class ActionDialog extends JPanel {
+    public static final int HEIGH_OF_CLICKABLE_MESSAGE = 30;
     private static final Dimension actionDialogSize = new Dimension(180, 75);
     private final ActionDialogContract actionDialogContract;
     private String receiver;
@@ -63,8 +64,7 @@ public class ActionDialog extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 actionDialogContract.setPrefixesToInputPanel(
-                        MessagePrefixes.WHISPER.getValue() + " " + receiver + ":" +
-                                actionDialogContract.getPrefixesFromInputPanel().substring(actionDialogContract.getPrefixesFromInputPanel().indexOf(':') + 1));
+                        MessagePrefixes.WHISPER.getValue() + " " + receiver + ":");
                 actionDialogContract.hideActionDialog();
                 repaint();
             }

@@ -1,6 +1,7 @@
 package client.ui.slither;
 
 import client.domain.SettingsSetter;
+import client.ui.chat.ActionDialog;
 import client.ui.chat.ActionDialogContract;
 
 import javax.swing.*;
@@ -51,19 +52,11 @@ public class PlayerList extends JPanel {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-//                try {
-//                    clientGameView.getActionDialog().setReceiver(player.getText());
-//                } catch (StringIndexOutOfBoundsException exception) {
-//                    return;
-//                }
-//                Point mouseLocation = SwingUtilities.convertPoint((Component) e.getSource(), e.getPoint(), PlayerList.this);
-//
-//                clientGameView.getActionDialog().setLocation(
-//                        mouseLocation.x + slitherPanel.getWidth() / 2 - playerListSize.width / 2,
-//                        mouseLocation.y
-//                );
-//                clientGameView.getActionDialog().setVisible(true);
-//                repaint();
+                actionDialogContract.setSender(player.getText());
+                actionDialogContract.showActionDialog(e.getLocationOnScreen().x,
+                        e.getLocationOnScreen().y - ActionDialog.HEIGH_OF_CLICKABLE_MESSAGE
+                );
+                repaint();
             }
         });
 

@@ -16,7 +16,6 @@ import shared.MessagePrefixes;
 
 public class ChatPanel extends JPanel {
 
-    private static final int HEIGH_OF_CLICKABLE_MESSAGE = 30;
     private final IChatCallback iChatCallback;
     private ActionDialogContract actionDialogContract;
     private PlayerListContract playerListContract;
@@ -148,7 +147,7 @@ public class ChatPanel extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 actionDialogContract.setSender(message.getSender());
                 actionDialogContract.showActionDialog(e.getX(),
-                        e.getLocationOnScreen().y - HEIGH_OF_CLICKABLE_MESSAGE
+                        e.getLocationOnScreen().y - ActionDialog.HEIGH_OF_CLICKABLE_MESSAGE
                 );
             }
         });

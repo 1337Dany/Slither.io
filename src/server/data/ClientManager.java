@@ -40,7 +40,7 @@ public class ClientManager implements Runnable {
             isRunning = true;
 
             while (isRunning) {
-                Object clientMessage = in.readObject();
+                Packet clientMessage = (Packet) in.readObject();
                 if (clientMessage instanceof Message receivedMessage) {
                     actionPerform(receivedMessage);
                 }

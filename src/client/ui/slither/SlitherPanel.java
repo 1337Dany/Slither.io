@@ -7,11 +7,13 @@ import client.ui.chat.ChatPanel;
 import client.ui.chat.IChatCallback;
 import shared.GameConfiguration;
 import shared.Message;
+import shared.MessagePrefixes;
 
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Objects;
 
 public class SlitherPanel extends JPanel implements IChatCallback, ActionDialogContract, PlayerListContract {
 
@@ -84,9 +86,6 @@ public class SlitherPanel extends JPanel implements IChatCallback, ActionDialogC
 
         this.add(playerList);
     }
-    public void removePlayer(String name) {
-        playerList.removePlayer(name);
-    }
 
     @Override
     protected void paintComponent(Graphics graphics) {
@@ -133,7 +132,11 @@ public class SlitherPanel extends JPanel implements IChatCallback, ActionDialogC
     }
 
     public void gameConfigurationsReceived(GameConfiguration gameConfiguration){
-        playerList.addPlayer(gameConfiguration.getTabTags());
+        if(gameConfiguration.getPrefix().getValue().equals( MessagePrefixes.TAB_CONFIGURATION.getValue())){
+            playerList.addPlayer(gameConfiguration.getTabTags());
+        } else if (Objects.equals(gameConfiguration.getPrefix().getValue(), MessagePrefixes.KICK.getValue())) {
+            playerList.removePlayer(gameConfiguration.getTabTags());
+        }
     }
     public void onMessageReceived(Message message) {
         chat.addMessage(message);
