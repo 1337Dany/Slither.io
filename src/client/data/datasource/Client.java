@@ -24,16 +24,27 @@ public class Client implements Runnable {
         this.callback = callback;
     }
 
-    public void connect(String name) {
+    public boolean connect(String name) {
+        //Sending name first to check similarities
+        sendMessage(new Message(MessagePrefixes.CHAT_CONFIGURATION, null, null, name));
+        try {
+            Packet clientMessage = (Packet) in.readObject();
+            GameConfiguration gameConfiguration = (GameConfiguration) clientMessage;
+            if (gameConfiguration.getPrefix() == MessagePrefixes.CONNECTION_RESET) {
+                callback.onError(new NameException());
+                return false;
+            }
+        } catch (Exception e) {
+            callback.onError(new NameException());
+        }
         this.name = name;
         gameThread.start();
+        return true;
     }
 
     @Override
     public void run() {
         try {
-            //Sending name first to check similarities
-            sendMessage(new Message(MessagePrefixes.CHAT_CONFIGURATION, null, null, name));
             while (true) {
                 Packet clientMessage = (Packet) in.readObject();
                 if (callback != null) {

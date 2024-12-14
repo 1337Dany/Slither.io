@@ -118,6 +118,9 @@ public class ChatPanel extends JPanel {
         } else if(message.getPrefix() == MessagePrefixes.CHAT_CONFIGURATION){
             messageArea.setForeground(Color.ORANGE);
             messageArea.setText(message.getSender() + ": " + message.getMessage());
+        } else if (message.getPrefix() == MessagePrefixes.CHAT_HISTORY) {
+            messageArea.setForeground(Color.WHITE);
+            messageArea.setText(message.getMessage());
         }
         messageArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         messageArea.setFont(new Font(messageArea.getFont().getFontName(), Font.PLAIN, 14));

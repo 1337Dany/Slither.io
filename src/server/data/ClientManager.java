@@ -40,7 +40,7 @@ public class ClientManager implements Runnable {
             isRunning = true;
 
             while (isRunning) {
-                Packet clientMessage = (Packet) in.readObject();
+                 Packet clientMessage = (Packet) in.readObject();
                 if (clientMessage instanceof Message receivedMessage) {
                     actionPerform(receivedMessage);
                 }
@@ -54,7 +54,7 @@ public class ClientManager implements Runnable {
 
     private void actionPerform(Message message) {
         if(message.getPrefix() == MessagePrefixes.TOALL){
-            server.getChatHistory().addNote(message.getMessage());
+            server.getChatHistory().addNote("(" + message.getSender() + "): " + message.getMessage());
             message.setSender(myName);
             server.sendMessageToEveryone(message);
         }else if(message.getPrefix() == MessagePrefixes.WHISPER){

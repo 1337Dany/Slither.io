@@ -7,8 +7,10 @@ public enum MessagePrefixes implements Serializable {
     WHISPER("To"),
     EXCEPTWHISPER("To not"),
     CHAT_CONFIGURATION("Server"),
+    CHAT_HISTORY("History"),
     TAB_CONFIGURATION("Tab"),
-    KICK("Kicked");
+    KICK("Kicked"),
+    CONNECTION_RESET("Connection reset");
     private static final long serialVersionUID = 1L;
     private final String value;
 

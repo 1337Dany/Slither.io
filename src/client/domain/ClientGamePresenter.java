@@ -20,8 +20,9 @@ public class ClientGamePresenter implements ClientCallback {
     public void establishConnection(String username, String ip) {
         try {
             client = new Client(12345, ip, this);
-            client.connect(username);
-            viewContract.openGameWindow();
+            if(client.connect(username)){
+                viewContract.openGameWindow();
+            }
         } catch (IOException e) {
             this.onError(new IpException());
         }

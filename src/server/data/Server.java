@@ -40,7 +40,7 @@ public class Server {
 
                 //  Check of existing player with the same name
                 if (clients.containsKey(clientManager.getName())) {
-                    clientManager.sendMessage(new Message(MessagePrefixes.CHAT_CONFIGURATION, null, serverName, "Server: player with this name is already exist"));
+                    clientManager.sendMessage(new GameConfiguration(MessagePrefixes.CONNECTION_RESET, "Name already exists"));
                     clientManager.closeConnection();
                     continue;
                 }
@@ -52,26 +52,26 @@ public class Server {
                     clientManager.sendMessage(new GameConfiguration(MessagePrefixes.TAB_CONFIGURATION,client.getKey()));
                 }
 
-                clientManager.sendMessage(new Message(MessagePrefixes.CHAT_CONFIGURATION, null, serverName, "Server: Welcome to the server " + serverName + "!!!!"));
+                clientManager.sendMessage(new GameConfiguration(MessagePrefixes.TAB_CONFIGURATION, serverName));
                 clientManager.sendMessage(
                         new Message(
                                 MessagePrefixes.CHAT_CONFIGURATION,
                                 null,
                                 serverName,
-                                "Server: Commands:\n" +
+                                "Commands:\n" +
                                         "To ....: -> send message to group or person\n" +
                                         "To not ....: -> send message to everyone except this group or person\n" +
                                         "To all: ....: -> send message to everyone\n" +
                                         "Keys:\n" +
                                         "TAB -> show list of players\n" +
-                                        "Server: Rules:\n" +
+                                        "Rules:\n" +
                                         "do not use this phrases in chat! -> " + configurations.getAllBanPhrases()
                         ));
 
                 // send all chat data to new user
                 String tmp;
                 while ((tmp = chatHistory.getNextTextArea()) != null) {
-                    clientManager.sendMessage(new Message(MessagePrefixes.CHAT_CONFIGURATION, null, serverName, tmp));
+                    clientManager.sendMessage(new Message(MessagePrefixes.CHAT_HISTORY, null, serverName, tmp));
                 }
 
                 new Thread(clientManager).start();
