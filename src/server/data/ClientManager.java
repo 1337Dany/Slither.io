@@ -1,5 +1,6 @@
 package server.data;
 
+import shared.GameConfiguration;
 import shared.Message;
 import shared.MessagePrefixes;
 import shared.Packet;
@@ -27,8 +28,8 @@ public class ClientManager implements Runnable {
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
-            Message nameMessage = (Message) in.readObject();
-                myName = nameMessage.getMessage();
+            GameConfiguration nameMessage = (GameConfiguration) in.readObject();
+                myName = nameMessage.getTabTags();
 
         } catch (IOException | ClassNotFoundException ignored) {
         }
@@ -53,8 +54,12 @@ public class ClientManager implements Runnable {
     }
 
     private void actionPerform(Message message) {
+        if(server.getBannedPhrases().containsBanPharases(message.getMessage())){
+            sendMessage(new Message(MessagePrefixes.CHAT_CONFIGURATION, null, "Server", "Inappropriate message detected in (" + message.getMessage() + ")"));
+            return;
+        }
         if(message.getPrefix() == MessagePrefixes.TOALL){
-            server.getChatHistory().addNote("(" + message.getSender() + "): " + message.getMessage());
+            server.getChatHistory().addNote("(" + myName + "): " + message.getMessage());
             message.setSender(myName);
             server.sendMessageToEveryone(message);
         }else if(message.getPrefix() == MessagePrefixes.WHISPER){
@@ -64,28 +69,6 @@ public class ClientManager implements Runnable {
             message.setSender(myName);
             server.sendMessageToEveryoneExceptOne(message);
         }
-//        if (message.startsWith("admin s30050: ")) {
-//            server.sendMessageToEveryone("Admin message: " + message.substring(14));
-//            if (message.contains("kick: ")) {
-//                server.kickUser(message.substring(20));
-//            }
-//        } else if (!server.getBannedPhrases().containsBanPharases(message)) {
-//            if (message.startsWith("To ")) {
-//                if (message.startsWith("To all: ")) {
-//                    server.getChatHistory().addNote("To all: " + "(" + myName + "): " + message.substring(8));
-//                    server.sendMessageToEveryone("To all: " + "(" + myName + "): " + message.substring(8));
-//                } else if (message.startsWith("To not ")) {
-//                    server.sendMessageToEveryoneExceptOne(message.substring(7), myName);
-//                } else {
-//                    server.sendMessageTo(message.substring(3), myName);
-//                }
-//            } else {
-//                server.getChatHistory().addNote("To all: " + "(" + myName + "): " + message);
-//                server.sendMessageToEveryone("To all: " + "(" + myName + "): " + message);
-//            }
-//        } else {
-//            sendMessage("Server: Inappropriate message detected in (" + message + ")");
-//        }
     }
 
     public void sendMessage(Packet message) {

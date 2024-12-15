@@ -53,14 +53,9 @@ public class ChatPanel extends JPanel {
         scrollPane.setBorder(null);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         JScrollBar verticalBar = scrollPane.getVerticalScrollBar();
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         verticalBar.setOpaque(false);
         add(scrollPane, BorderLayout.CENTER);
-        // Automatically scrolling to the newest messages
-        SwingUtilities.invokeLater(() -> {
-                    scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
-                    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-                }
-        );
     }
 
     private void configureUserInput() {
@@ -83,7 +78,7 @@ public class ChatPanel extends JPanel {
                 if (event.getKeyCode() == KeyEvent.VK_ENTER) {
                     event.consume();
                     MessageUtils message = new MessageUtils();
-                    if(userInput.getText().isEmpty()) return;
+                    if (userInput.getText().isEmpty()) return;
                     iChatCallback.sendMessage(message.buildMessage(userInput.getText()));
                     userInput.setText("");
 
@@ -115,7 +110,7 @@ public class ChatPanel extends JPanel {
         } else if (message.getPrefix() == MessagePrefixes.WHISPER || message.getPrefix() == MessagePrefixes.EXCEPTWHISPER) {
             messageArea.setText("-> (" + message.getSender() + ") " + message.getMessage());
             messageArea.setForeground(Color.GREEN);
-        } else if(message.getPrefix() == MessagePrefixes.CHAT_CONFIGURATION){
+        } else if (message.getPrefix() == MessagePrefixes.CHAT_CONFIGURATION) {
             messageArea.setForeground(Color.ORANGE);
             messageArea.setText(message.getSender() + ": " + message.getMessage());
         } else if (message.getPrefix() == MessagePrefixes.CHAT_HISTORY) {
@@ -154,6 +149,12 @@ public class ChatPanel extends JPanel {
                 );
             }
         });
+
+        // Automatically scrolling to the newest messages
+        SwingUtilities.invokeLater(() -> {
+                    scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
+                }
+        );
     }
 
     public void setActionDialogContract(ActionDialogContract actionDialogContract) {

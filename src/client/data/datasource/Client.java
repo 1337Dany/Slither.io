@@ -25,18 +25,6 @@ public class Client implements Runnable {
     }
 
     public boolean connect(String name) {
-        //Sending name first to check similarities
-        sendMessage(new Message(MessagePrefixes.CHAT_CONFIGURATION, null, null, name));
-        try {
-            Packet clientMessage = (Packet) in.readObject();
-            GameConfiguration gameConfiguration = (GameConfiguration) clientMessage;
-            if (gameConfiguration.getPrefix() == MessagePrefixes.CONNECTION_RESET) {
-                callback.onError(new NameException());
-                return false;
-            }
-        } catch (Exception e) {
-            callback.onError(new NameException());
-        }
         this.name = name;
         gameThread.start();
         return true;
@@ -45,13 +33,20 @@ public class Client implements Runnable {
     @Override
     public void run() {
         try {
+            //Sending name first to check similarities
+            sendMessage(new GameConfiguration(MessagePrefixes.TAB_CONFIGURATION, name));
+
             while (true) {
                 Packet clientMessage = (Packet) in.readObject();
                 if (callback != null) {
                     if (clientMessage instanceof Message) {
                         callback.onMessageReceived((Message) clientMessage);
-                    } else if (clientMessage instanceof GameConfiguration) {
-                        callback.gameConfigurationReceived((GameConfiguration) clientMessage);
+                    } else if (clientMessage instanceof GameConfiguration clientConfiguration) {
+                        if (clientConfiguration.getPrefix() == MessagePrefixes.CONNECTION_RESET) {
+                            callback.onError(new NameException());
+                            return;
+                        }
+                        callback.gameConfigurationReceived(clientConfiguration);
                     }
                 }
             }
@@ -71,7 +66,7 @@ public class Client implements Runnable {
         }
     }
 
-    public void sendMessage(Message message) {
+    public void sendMessage(Packet message) {
         try {
             out.writeObject(message);
         } catch (IOException exception) {

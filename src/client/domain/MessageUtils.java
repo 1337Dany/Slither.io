@@ -38,13 +38,4 @@ public class MessageUtils {
             );
         }
     }
-
-//    public Message parseMessageFromServer(Message message) {
-//        if (message.getPrefix() == MessagePrefixes.TOALL) {
-//            return new ToAllMessage(message);
-//        } else {
-//            //other
-//            return new ToAllMessage(message);
-//        }
-//    }
 }

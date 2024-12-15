@@ -46,19 +46,21 @@ public class Server {
                 }
 
                 sendMessageToEveryone(new Message(MessagePrefixes.CHAT_CONFIGURATION, null, serverName, "Player " + clientManager.getName() + " logged in"));
+
+                //  Send nickname of new player to all players
                 sendMessageToEveryone(new GameConfiguration(MessagePrefixes.TAB_CONFIGURATION, clientManager.getName()));
 
+                //  Send nicknames of all players to new player
                 for (Map.Entry<String, ClientManager> client : clients.entrySet()) {
-                    clientManager.sendMessage(new GameConfiguration(MessagePrefixes.TAB_CONFIGURATION,client.getKey()));
+                    clientManager.sendMessage(new GameConfiguration(MessagePrefixes.TAB_CONFIGURATION, client.getKey()));
                 }
 
-                clientManager.sendMessage(new GameConfiguration(MessagePrefixes.TAB_CONFIGURATION, serverName));
                 clientManager.sendMessage(
                         new Message(
                                 MessagePrefixes.CHAT_CONFIGURATION,
                                 null,
                                 serverName,
-                                "Commands:\n" +
+                                "\nCommands:\n" +
                                         "To ....: -> send message to group or person\n" +
                                         "To not ....: -> send message to everyone except this group or person\n" +
                                         "To all: ....: -> send message to everyone\n" +
