@@ -55,7 +55,7 @@ public class ClientManager implements Runnable {
 
     private void actionPerform(Message message) {
         if(server.getBannedPhrases().containsBanPharases(message.getMessage())){
-            sendMessage(new Message(MessagePrefixes.CHAT_CONFIGURATION, null, "Server", "Inappropriate message detected in (" + message.getMessage() + ")"));
+            sendMessage(new Message(MessagePrefixes.CHAT_CONFIGURATION, null, server.getServerName(), "Inappropriate message detected in (" + message.getMessage() + ")"));
             return;
         }
         if(message.getPrefix() == MessagePrefixes.TOALL){

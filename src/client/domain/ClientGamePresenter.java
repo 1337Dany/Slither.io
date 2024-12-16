@@ -33,6 +33,7 @@ public class ClientGamePresenter implements ClientCallback {
         if (exception instanceof IpException) {
             viewContract.showWrongIp();
         } else if (exception instanceof NameException) {
+            viewContract.openMenu();
             viewContract.showWrongName();
         } else if (exception instanceof ServerDisconnectedException) {
             viewContract.openMenu();

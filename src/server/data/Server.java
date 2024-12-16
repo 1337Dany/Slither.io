@@ -16,9 +16,10 @@ public class Server {
     private final Configurations configurations;
     private final ChatHistory chatHistory = new ChatHistory();
     private final int port;
-    private final String serverName;
-    static Map<String, ClientManager> clients = new HashMap<>();
 
+    private final String serverName;
+
+    static Map<String, ClientManager> clients = new HashMap<>();
     public static void main(String[] args) {
         Server server = new Server();
     }
@@ -139,5 +140,8 @@ public class Server {
                         serverName,
                         "Player " + name + " logged out"
                 ));
+    }
+    public String getServerName() {
+        return serverName;
     }
 }
