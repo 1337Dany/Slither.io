@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Server {
+public class Server implements ClientManagerCallback {
     private final Configurations configurations;
     private final ChatHistory chatHistory = new ChatHistory();
     private final int port;
@@ -100,46 +100,7 @@ public class Server {
         });
     }
 
-    public void sendMessageToEveryone(Packet message) {
-        for (Map.Entry<String, ClientManager> client : clients.entrySet()) {
-            client.getValue().sendMessage(message);
-        }
-    }
-
-    public void sendMessageTo(Message message) {
-        String[] str = (message.getReceiver().split(","));
-        for (String name : str) {
-            clients.get(name).sendMessage(message);
-        }
-        clients.get(message.getSender()).sendMessage(message);
-    }
-
-    public void sendMessageToEveryoneExceptOne(Message message) {
-        String[] notToSendTo = (message.getReceiver().split(","));
-        boolean isSent = true;
-
-        for (Map.Entry<String, ClientManager> client : clients.entrySet()) {
-            for (int i = 0; i < notToSendTo.length; i++) {
-                if (client.getKey().equals(notToSendTo[i])) {
-                    isSent = false;
-                }
-            }
-            if (isSent) {
-                client.getValue().sendMessage(message);
-            }
-            isSent = true;
-        }
-    }
-
-    public ChatHistory getChatHistory() {
-        return chatHistory;
-    }
-
-    public Configurations getBannedPhrases() {
-        return configurations;
-    }
-
-    public void kickUser(String name) {
+    private void kickUser(String name) {
         //  Necessary to remove it by name to avoid case when user did not specified his name and it is null
         clients.get(name).closeConnection();
         clients.remove(name);
@@ -155,6 +116,51 @@ public class Server {
                 ));
     }
 
+    @Override
+    public void sendMessageToEveryone(Packet message) {
+        for (Map.Entry<String, ClientManager> client : clients.entrySet()) {
+            client.getValue().sendMessage(message);
+        }
+    }
+
+    @Override
+    public void sendMessageTo(Message message) {
+        String[] str = (message.getReceiver().split(","));
+        for (String name : str) {
+            clients.get(name).sendMessage(message);
+        }
+        clients.get(message.getSender()).sendMessage(message);
+    }
+
+    @Override
+    public void sendMessageToEveryoneExceptOne(Message message) {
+        String[] notToSendTo = (message.getReceiver().split(","));
+        boolean isSent = true;
+
+        for (Map.Entry<String, ClientManager> client : clients.entrySet()) {
+            for (String s : notToSendTo) {
+                if (client.getKey().equals(s)) {
+                    isSent = false;
+                }
+            }
+            if (isSent) {
+                client.getValue().sendMessage(message);
+            }
+            isSent = true;
+        }
+    }
+
+    @Override
+    public ChatHistory getChatHistory() {
+        return chatHistory;
+    }
+
+    @Override
+    public Configurations getBannedPhrases() {
+        return configurations;
+    }
+
+    @Override
     public String getServerName() {
         return serverName;
     }

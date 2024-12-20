@@ -9,7 +9,7 @@ import java.io.*;
 import java.net.Socket;
 
 public class ClientManager {
-    private final Server server;
+    private final ClientManagerCallback clientManagerCallback;
     private final Socket socket;
     private ObjectInputStream in = null;
     private ObjectOutputStream out = null;
@@ -18,8 +18,8 @@ public class ClientManager {
     private final int myPort;
     private boolean isRunning = false;
 
-    public ClientManager(Server server, Socket socket) {
-        this.server = server;
+    public ClientManager(ClientManagerCallback clientManagerCallback, Socket socket) {
+        this.clientManagerCallback = clientManagerCallback;
         this.socket = socket;
         myIp = String.valueOf(socket.getInetAddress());
         myPort = socket.getPort();
@@ -53,20 +53,26 @@ public class ClientManager {
     }
 
     private void actionPerform(Message message) {
-        if(server.getBannedPhrases().containsBanPharases(message.getMessage())){
-            sendMessage(new Message(MessagePrefixes.CHAT_CONFIGURATION, null, server.getServerName(), "Inappropriate message detected in (" + message.getMessage() + ")"));
+        if(clientManagerCallback.getBannedPhrases().containsBanPharases(message.getMessage())){
+            sendMessage(
+                    new Message(
+                            MessagePrefixes.CHAT_CONFIGURATION,
+                            null,
+                            clientManagerCallback.getServerName(),
+                            "Inappropriate message detected in (" + message.getMessage() + ")"
+                    ));
             return;
         }
         if(message.getPrefix() == MessagePrefixes.TOALL){
-            server.getChatHistory().addNote("(" + myName + "): " + message.getMessage());
+            clientManagerCallback.getChatHistory().addNote("(" + myName + "): " + message.getMessage());
             message.setSender(myName);
-            server.sendMessageToEveryone(message);
+            clientManagerCallback.sendMessageToEveryone(message);
         }else if(message.getPrefix() == MessagePrefixes.WHISPER){
             message.setSender(myName);
-            server.sendMessageTo(message);
+            clientManagerCallback.sendMessageTo(message);
         }else if(message.getPrefix() == MessagePrefixes.EXCEPTWHISPER){
             message.setSender(myName);
-            server.sendMessageToEveryoneExceptOne(message);
+            clientManagerCallback.sendMessageToEveryoneExceptOne(message);
         }
     }
 
