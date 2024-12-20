@@ -8,7 +8,7 @@ import shared.Packet;
 import java.io.*;
 import java.net.Socket;
 
-public class ClientManager implements Runnable {
+public class ClientManager {
     private final Server server;
     private final Socket socket;
     private ObjectInputStream in = null;
@@ -31,11 +31,11 @@ public class ClientManager implements Runnable {
             GameConfiguration nameMessage = (GameConfiguration) in.readObject();
                 myName = nameMessage.getTabTags();
 
-        } catch (IOException | ClassNotFoundException ignored) {
+        } catch (IOException | ClassNotFoundException exception) {
+            exception.printStackTrace();
         }
     }
 
-    @Override
     public void run() {
         try {
             isRunning = true;
@@ -48,8 +48,7 @@ public class ClientManager implements Runnable {
             }
 
         } catch (ClassNotFoundException | IOException e) {
-            System.out.println("Client " + getFullAddress() + " disconected");
-            server.kickUser(myName);
+            e.printStackTrace();
         }
     }
 

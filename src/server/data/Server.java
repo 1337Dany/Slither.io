@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,6 +23,7 @@ public class Server {
 
     private static final ConcurrentHashMap<String, ClientManager> clients = new ConcurrentHashMap<>();
     private static final ExecutorService executorSevice = Executors.newThreadPerTaskExecutor(Thread.ofVirtual().name("Player", 0).factory());
+
     public static void main(String[] args) {
         Server server = new Server();
     }
@@ -35,58 +37,67 @@ public class Server {
 
     private void startServer() {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
-
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-                ClientManager clientManager = new ClientManager(this, clientSocket);
+                handleClient(clientSocket);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-                //  Check of existing player with the same name
-                if (clients.containsKey(clientManager.getName())) {
-                    clientManager.sendMessage(new GameConfiguration(MessagePrefixes.CONNECTION_RESET, "Name already exists"));
-                    clientManager.closeConnection();
-                    continue;
-                }
+    private void handleClient(Socket clientSocket) {
+        ClientManager clientManager = new ClientManager(this, clientSocket);
 
-                sendMessageToEveryone(new Message(MessagePrefixes.CHAT_CONFIGURATION, null, serverName, "Player " + clientManager.getName() + " logged in"));
-
-                //  Send nickname of new player to all players
-                sendMessageToEveryone(new GameConfiguration(MessagePrefixes.TAB_CONFIGURATION, clientManager.getName()));
-
-                //  Send nicknames of all players to new player
-                for (Map.Entry<String, ClientManager> client : clients.entrySet()) {
-                    clientManager.sendMessage(new GameConfiguration(MessagePrefixes.TAB_CONFIGURATION, client.getKey()));
-                }
-
-                clientManager.sendMessage(
-                        new Message(
-                                MessagePrefixes.CHAT_CONFIGURATION,
-                                null,
-                                serverName,
-                                "\nCommands:\n" +
-                                        "To ....: -> send message to group or person\n" +
-                                        "To not ....: -> send message to everyone except this group or person\n" +
-                                        "To all: ....: -> send message to everyone\n" +
-                                        "Keys:\n" +
-                                        "TAB -> show list of players\n" +
-                                        "Rules:\n" +
-                                        "do not use this phrases in chat! -> " + configurations.getAllBanPhrases()
-                        ));
-
-                // send all chat data to new user
-                String tmp;
-                while ((tmp = chatHistory.getNextTextArea()) != null) {
-                    clientManager.sendMessage(new Message(MessagePrefixes.CHAT_HISTORY, null, serverName, tmp));
-                }
-
-                executorSevice.submit(clientManager);
-                clients.put(clientManager.getName(), clientManager);
-                System.out.println("Client " + clientManager.getFullAddress() + " connected successfully");
-
+        CompletableFuture<Void> completableFuture = CompletableFuture.runAsync(() -> {
+            //  Check of existing player with the same name
+            if (clients.containsKey(clientManager.getName())) {
+                clientManager.sendMessage(new GameConfiguration(MessagePrefixes.CONNECTION_RESET, "Name already exists"));
+                clientManager.closeConnection();
+                return;
             }
 
-        } catch (IOException e) {
-            System.out.println("Client disconnected");
-        }
+            sendMessageToEveryone(new Message(MessagePrefixes.CHAT_CONFIGURATION, null, serverName, "Player " + clientManager.getName() + " logged in"));
+
+            //  Send nickname of new player to all players
+            sendMessageToEveryone(new GameConfiguration(MessagePrefixes.TAB_CONFIGURATION, clientManager.getName()));
+
+            //  Send nicknames of all players to new player
+            for (Map.Entry<String, ClientManager> client : clients.entrySet()) {
+                clientManager.sendMessage(new GameConfiguration(MessagePrefixes.TAB_CONFIGURATION, client.getKey()));
+            }
+
+            clientManager.sendMessage(
+                    new Message(
+                            MessagePrefixes.CHAT_CONFIGURATION,
+                            null,
+                            serverName,
+                            "\nCommands:\n" +
+                                    "To ....: -> send message to group or person\n" +
+                                    "To not ....: -> send message to everyone except this group or person\n" +
+                                    "To all: ....: -> send message to everyone\n" +
+                                    "Keys:\n" +
+                                    "TAB -> show list of players\n" +
+                                    "Rules:\n" +
+                                    "do not use this phrases in chat! -> " + configurations.getAllBanPhrases()
+                    ));
+
+            // send all chat data to new user
+            String tmp;
+            while ((tmp = chatHistory.getNextTextArea()) != null) {
+                clientManager.sendMessage(new Message(MessagePrefixes.CHAT_HISTORY, null, serverName, tmp));
+            }
+
+            clients.put(clientManager.getName(), clientManager);
+            System.out.println("Client " + clientManager.getFullAddress() + " connected successfully");
+            clientManager.run();
+        }, executorSevice);
+
+        //  Handling cases when client disconnects or can not connect to the server
+        completableFuture.whenComplete((result, executor) -> {
+            System.out.println("Client " + clientManager.getFullAddress() + " disconected");
+            kickUser(clientManager.getName());
+        });
     }
 
     public void sendMessageToEveryone(Packet message) {
@@ -129,6 +140,7 @@ public class Server {
     }
 
     public void kickUser(String name) {
+        //  Necessary to remove it by name to avoid case when user did not specified his name and it is null
         clients.get(name).closeConnection();
         clients.remove(name);
         System.out.println(name + " removed");
@@ -142,6 +154,7 @@ public class Server {
                         "Player " + name + " logged out"
                 ));
     }
+
     public String getServerName() {
         return serverName;
     }
