@@ -9,17 +9,19 @@ import shared.Packet;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Server {
     private final Configurations configurations;
     private final ChatHistory chatHistory = new ChatHistory();
     private final int port;
-
     private final String serverName;
 
-    static Map<String, ClientManager> clients = new HashMap<>();
+    private static final ConcurrentHashMap<String, ClientManager> clients = new ConcurrentHashMap<>();
+    private static final ExecutorService executorSevice = Executors.newThreadPerTaskExecutor(Thread.ofVirtual().name("Player", 0).factory());
     public static void main(String[] args) {
         Server server = new Server();
     }
@@ -28,7 +30,6 @@ public class Server {
         configurations = new Configurations();
         port = configurations.giveServerPort();
         serverName = configurations.giveServerName();
-
         startServer();
     }
 
@@ -77,7 +78,7 @@ public class Server {
                     clientManager.sendMessage(new Message(MessagePrefixes.CHAT_HISTORY, null, serverName, tmp));
                 }
 
-                new Thread(clientManager).start();
+                executorSevice.submit(clientManager);
                 clients.put(clientManager.getName(), clientManager);
                 System.out.println("Client " + clientManager.getFullAddress() + " connected successfully");
 

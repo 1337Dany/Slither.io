@@ -108,7 +108,7 @@ public class ChatPanel extends JPanel {
             messageArea.setForeground(Color.WHITE);
             messageArea.setText("(" + message.getSender() + "): " + message.getMessage());
         } else if (message.getPrefix() == MessagePrefixes.WHISPER || message.getPrefix() == MessagePrefixes.EXCEPTWHISPER) {
-            messageArea.setText("-> (" + message.getSender() + ") " + message.getMessage());
+            messageArea.setText("(" + message.getSender() + ") -> " + message.getMessage());
             messageArea.setForeground(Color.GREEN);
         } else if (message.getPrefix() == MessagePrefixes.CHAT_CONFIGURATION) {
             messageArea.setForeground(Color.ORANGE);
