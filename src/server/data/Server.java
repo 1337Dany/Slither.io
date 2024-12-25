@@ -49,6 +49,7 @@ public class Server implements ClientManagerCallback {
     private void handleClient(Socket clientSocket) {
         ClientManager clientManager = new ClientManager(this, clientSocket);
 
+        //  Run async virtual thread for logic of creating and starting client through CompletableFuture
         CompletableFuture<Void> completableFuture = CompletableFuture.runAsync(() -> {
             //  Check of existing player with the same name
             if (clients.containsKey(clientManager.getName())) {
@@ -118,9 +119,9 @@ public class Server implements ClientManagerCallback {
 
     @Override
     public void sendMessageToEveryone(Packet message) {
-        for (Map.Entry<String, ClientManager> client : clients.entrySet()) {
-            client.getValue().sendMessage(message);
-        }
+        clients.forEach((key, value) -> {
+            value.sendMessage(message);
+        });
     }
 
     @Override
@@ -135,19 +136,18 @@ public class Server implements ClientManagerCallback {
     @Override
     public void sendMessageToEveryoneExceptOne(Message message) {
         String[] notToSendTo = (message.getReceiver().split(","));
-        boolean isSent = true;
 
-        for (Map.Entry<String, ClientManager> client : clients.entrySet()) {
+        clients.forEach((key, value) -> {
+            boolean isSent = true;
             for (String s : notToSendTo) {
-                if (client.getKey().equals(s)) {
+                if (key.equals(s)) {
                     isSent = false;
                 }
             }
-            if (isSent) {
-                client.getValue().sendMessage(message);
-            }
-            isSent = true;
+        if (isSent) {
+            value.sendMessage(message);
         }
+        });
     }
 
     @Override
